@@ -17,11 +17,11 @@ const config = {
     debug: process.env.NODE_ENV === 'development' ? { request: ['error'] } : {},
   },
   database: {
-    host: process.env.PGHOST,
-    port: process.env.PGPORT,
-    user: process.env.PGUSER,
-    password: process.env.PGPASSWORD,
-    database: process.env.PGDATABASE,
+    host: process.env.PGHOST || 'localhost',
+    port: Number(process.env.PGPORT) || 5432,
+    user: process.env.PGUSER || 'postgres',
+    password: process.env.PGPASSWORD || 'postgres',
+    database: process.env.PGDATABASE || 'forum_api',
   },
   auth: {
     jwtStrategy: 'forumapi',
