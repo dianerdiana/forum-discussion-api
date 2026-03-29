@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NewAuth } from '../new-auth.js';
 
 describe('NewAuth entities', () => {
@@ -5,7 +6,7 @@ describe('NewAuth entities', () => {
     // Arrange
     const payload = {
       accessToken: 'accessToken',
-    };
+    } as any;
 
     // Action & Assert
     expect(() => new NewAuth(payload)).toThrow('NEW_AUTH.NOT_CONTAIN_NEEDED_PROPERTY');
@@ -16,7 +17,6 @@ describe('NewAuth entities', () => {
     const payload = {
       accessToken: 'accessToken',
       refreshToken: 1234,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;
 
     // Action & Assert

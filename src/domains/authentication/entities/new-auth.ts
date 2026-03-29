@@ -1,11 +1,11 @@
 export type NewAuthPayload = {
-  accessToken?: string;
-  refreshToken?: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 export class NewAuth {
-  accessToken: string | undefined;
-  refreshToken: string | undefined;
+  accessToken: string;
+  refreshToken: string;
 
   constructor(payload: NewAuthPayload) {
     this._verifyPayload(payload);
@@ -14,7 +14,7 @@ export class NewAuth {
     this.refreshToken = payload.refreshToken;
   }
 
-  _verifyPayload(payload: NewAuthPayload) {
+  _verifyPayload(payload: NewAuthPayload): NewAuthPayload {
     const { accessToken, refreshToken } = payload;
 
     if (!accessToken || !refreshToken) {
@@ -24,5 +24,7 @@ export class NewAuth {
     if (typeof accessToken !== 'string' || typeof refreshToken !== 'string') {
       throw new Error('NEW_AUTH.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
+
+    return payload;
   }
 }
