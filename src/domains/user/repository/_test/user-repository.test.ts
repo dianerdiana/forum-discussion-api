@@ -1,4 +1,4 @@
-import { UserRepository } from '../repositories/user.repository.js';
+import { UserRepository } from '../user.repository.js';
 
 // prettier-ignore
 describe('UserRepository interface', () => {
