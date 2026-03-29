@@ -1,12 +1,12 @@
 import js from '@eslint/js';
+import vitest from '@vitest/eslint-plugin';
 import { defineConfig } from 'eslint/config';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import daStyle from 'eslint-config-dicodingacademy';
 import prettier from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
-import daStyle from 'eslint-config-dicodingacademy';
-import vitest from '@vitest/eslint-plugin';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   {
@@ -29,7 +29,7 @@ export default defineConfig([
       },
       globals: {
         ...globals.node,
-        ...vitest.environments.env.globals,
+        ...globals.vitest,
       },
     },
     plugins: {
@@ -94,11 +94,25 @@ export default defineConfig([
         },
       ],
 
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      'no-console': 'off',
-
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
+  },
+
+  {
+    files: ['**/*.test.{js,ts}', '**/*.spec.{js,ts}'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+      globals: {
+        ...globals.node,
+        ...vitest.environments.env.globals,
+        ...globals.vitest,
+      },
+    },
+    plugins: { vitest },
+    ...vitest.configs.recommended,
   },
 ]);

@@ -1,27 +1,22 @@
 {
   "compilerOptions": {
-    "typeRoots": ["./node_modules/@types", "./src/@types"],
-
     // File Layout
     "rootDir": "./src",
+    "baseUrl": "./src",
     "outDir": "./dist",
     "paths": {
-      "@/*": ["./*"],
-      "@/application/*": ["application/*"],
-      "@/common/*": ["common/*"],
-      "@/domain/*": ["domain/*"],
-      "@/infrastructure/*": ["infrastructure/*"],
-      "@/interface/*": ["interface/*"]
+      "@/*": ["./*"]
     },
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
-    "target": "esnext",
+    "target": "es2022",
 
     // For nodejs:
-    "lib": ["ES2022", "DOM"],
-    "types": ["node"],
+    "lib": ["ES2022"],
+    "moduleResolution": "NodeNext",
+    "types": ["node", "vitest/globals"],
 
     // Other Outputs
     "sourceMap": true,
@@ -38,9 +33,8 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
-    "baseUrl": "./src"
+    "skipLibCheck": true
   },
-  "include": ["src/**/*", "src/@types/express.d.ts"],
+  "include": ["src/**/*", "src/**/*.test.ts"],
   "exclude": ["node_modules", "dist"]
 }

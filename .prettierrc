@@ -3,8 +3,5 @@
   "trailingComma": "all",
   "semi": true,
   "singleQuote": true,
-  "tabWidth": 2,
-  "htmlWhitespaceSensitivity": "ignore",
-  "jsxSingleQuote": true,
-  "endOfLine": "auto"
+  "tabWidth": 2
 }
