@@ -39,6 +39,7 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': 'off',
+      'linebreak-style': 'off',
 
       'simple-import-sort/imports': [
         'error',
