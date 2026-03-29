@@ -1,43 +1,31 @@
-export type RegisterUserPayload = {
+export type RegisteredUserPayload = {
+  id: string;
   username: string;
-  password: string;
   fullname: string;
 };
 
-export class RegisterUser {
+export class RegisteredUser {
+  id: string;
   username: string;
-  password: string;
   fullname: string;
 
-  constructor(payload: RegisterUserPayload) {
+  constructor(payload: RegisteredUserPayload) {
     this._verifyPayload(payload);
 
-    const { username, password, fullname } = payload;
+    const { id, username, fullname } = payload;
 
+    this.id = id;
     this.username = username;
-    this.password = password;
     this.fullname = fullname;
   }
 
-  _verifyPayload({ username, password, fullname }: RegisterUserPayload) {
-    if (!username || !password || !fullname) {
-      throw new Error('REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY');
+  _verifyPayload({ id, username, fullname }: RegisteredUserPayload) {
+    if (!id || !username || !fullname) {
+      throw new Error('REGISTERED_USER.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (
-      typeof username !== 'string' ||
-      typeof password !== 'string' ||
-      typeof fullname !== 'string'
-    ) {
-      throw new Error('REGISTER_USER.NOT_MEET_DATA_TYPE_SPECIFICATION');
-    }
-
-    if (username.length > 50) {
-      throw new Error('REGISTER_USER.USERNAME_LIMIT_CHAR');
-    }
-
-    if (!username.match(/^[\w]+$/)) {
-      throw new Error('REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER');
+    if (typeof id !== 'string' || typeof username !== 'string' || typeof fullname !== 'string') {
+      throw new Error('REGISTERED_USER.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
 }

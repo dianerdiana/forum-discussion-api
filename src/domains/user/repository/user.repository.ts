@@ -7,7 +7,7 @@ export class UserRepository {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async getPasswordByUsername(_username: string) {
+  async getPasswordByUsername(_username: string): Promise<string> {
     throw new Error('USER_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
