@@ -58,18 +58,6 @@ export default defineConfig([
             ['^@/interface'],
             ['^@/'],
 
-            ['^./application'],
-            ['^./common'],
-            ['^./domain'],
-            ['^./infrastructure'],
-            ['^./interface'],
-
-            ['^../../application'],
-            ['^../../common'],
-            ['^../../domain'],
-            ['^../../infrastructure'],
-            ['^../../interface'],
-
             // Parent
             ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
 

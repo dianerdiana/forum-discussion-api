@@ -25,9 +25,9 @@ const config = {
   },
   auth: {
     jwtStrategy: 'forumapi',
-    accessTokenKey: process.env.ACCESS_TOKEN_KEY,
-    refreshTokenKey: process.env.REFRESH_TOKEN_KEY,
-    accessTokenAge: process.env.ACCESS_TOKEN_AGE,
+    accessTokenKey: process.env.ACCESS_TOKEN_KEY || 'ACCESS_TOKEN_KEY',
+    refreshTokenKey: process.env.REFRESH_TOKEN_KEY || 'REFRESH_TOKEN_KEY',
+    accessTokenAge: process.env.ACCESS_TOKEN_AGE || 3000,
   },
 };
 
