@@ -1,0 +1,65 @@
+{
+  "name": "forum-discussion-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "build": "npm run build:ts && npm run build:alias",
+    "build:ts": "tsc",
+    "build:alias": "tsc-alias",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "migrate": "node-pg-migrate -d ./migrations -m ./migrations up",
+    "migrate:create": "node-pg-migrate -j ts -d ./migrations -m ./migrations create",
+    "migrate:down": "node-pg-migrate -d ./migrations -m ./migrations down"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dianerdiana/forum-discussion-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/dianerdiana/forum-discussion-api/issues"
+  },
+  "homepage": "https://github.com/dianerdiana/forum-discussion-api#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "instances-container": "^2.0.6",
+    "jsonwebtoken": "^9.0.3",
+    "node-pg-migrate": "^8.0.4",
+    "pg": "^8.20.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.5.0",
+    "@types/pg": "^8.20.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "@vitest/coverage-v8": "^4.1.2",
+    "@vitest/eslint-plugin": "^1.6.13",
+    "eslint": "^10.1.0",
+    "eslint-config-dicodingacademy": "^0.9.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "supertest": "^7.2.2",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.2",
+    "vitest": "^4.1.2"
+  }
+}
