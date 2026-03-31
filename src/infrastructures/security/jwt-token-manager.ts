@@ -7,7 +7,7 @@ import { InvariantError } from '@/commons/exceptions/invariant-error.js';
 
 import type { JwtAdapter } from './jwt-adapter.js';
 
-class JwtTokenManager extends AuthenticationTokenManager {
+export class JwtTokenManager extends AuthenticationTokenManager {
   private readonly _jwt: JwtAdapter;
 
   constructor(jwt: JwtAdapter) {
@@ -41,5 +41,3 @@ class JwtTokenManager extends AuthenticationTokenManager {
     return payload;
   }
 }
-
-export default JwtTokenManager;

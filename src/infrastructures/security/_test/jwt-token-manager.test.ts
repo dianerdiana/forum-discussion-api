@@ -5,7 +5,7 @@ import config from '@/commons/config.js';
 import { InvariantError } from '@/commons/exceptions/invariant-error.js';
 
 import type { JwtAdapter } from '../jwt-adapter.js';
-import JwtTokenManager from '../jwt-token-manager.js';
+import { JwtTokenManager } from '../jwt-token-manager.js';
 
 describe('JwtTokenManager', () => {
   describe('createAccessToken function', () => {
