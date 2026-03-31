@@ -1,6 +1,8 @@
+import type { AuthPayload } from '@/domains/index.js';
+
 export interface AuthenticationTokenManager {
-  createRefreshToken: (payload: object) => Promise<string>;
-  createAccessToken: (payload: object) => Promise<string>;
+  createRefreshToken: (payload: AuthPayload) => Promise<string>;
+  createAccessToken: (payload: AuthPayload) => Promise<string>;
   verifyRefreshToken: (token: string) => Promise<void>;
-  decodePayload: (payload: string) => Promise<object>;
+  decodePayload: (payload: string) => Promise<AuthPayload>;
 }
