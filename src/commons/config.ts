@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'test') {
 const config = {
   app: {
     host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
-    port: process.env.PORT,
+    port: Number(process.env.PORT) || 3000,
     debug: process.env.NODE_ENV === 'development' ? { request: ['error'] } : {},
   },
   database: {
