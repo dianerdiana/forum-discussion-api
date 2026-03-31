@@ -1,10 +1,10 @@
 import { InvariantError } from '@/commons/exceptions/invariant-error.js';
 
-import { pool } from '@/infrastructures/database/postgres/pool.js';
+import { db } from '@/infrastructures/database/postgres/db.js';
 
 import { AuthenticationsTableTestHelper } from '@/tests/authentications-table-test.helper.js';
 
-import AuthenticationRepositoryPostgres from '../authentication-postgres.repository.js';
+import { AuthenticationRepositoryPostgres } from '../authentication-postgres.repository.js';
 
 describe('AuthenticationRepository postgres', () => {
   afterEach(async () => {
@@ -12,13 +12,13 @@ describe('AuthenticationRepository postgres', () => {
   });
 
   afterAll(async () => {
-    await pool.close();
+    await db.close();
   });
 
   describe('addToken function', () => {
     it('should add token to database', async () => {
       // Arrange
-      const authenticationRepository = new AuthenticationRepositoryPostgres(pool);
+      const authenticationRepository = new AuthenticationRepositoryPostgres(db);
       const token = 'token';
 
       // Action
@@ -34,7 +34,7 @@ describe('AuthenticationRepository postgres', () => {
   describe('checkAvailabilityToken function', () => {
     it('should throw InvariantError if token not available', async () => {
       // Arrange
-      const authenticationRepository = new AuthenticationRepositoryPostgres(pool);
+      const authenticationRepository = new AuthenticationRepositoryPostgres(db);
       const token = 'token';
 
       // Action & Assert
@@ -45,7 +45,7 @@ describe('AuthenticationRepository postgres', () => {
 
     it('should not throw InvariantError if token available', async () => {
       // Arrange
-      const authenticationRepository = new AuthenticationRepositoryPostgres(pool);
+      const authenticationRepository = new AuthenticationRepositoryPostgres(db);
       const token = 'token';
       await AuthenticationsTableTestHelper.addToken(token);
 
@@ -59,7 +59,7 @@ describe('AuthenticationRepository postgres', () => {
   describe('deleteToken', () => {
     it('should delete token from database', async () => {
       // Arrange
-      const authenticationRepository = new AuthenticationRepositoryPostgres(pool);
+      const authenticationRepository = new AuthenticationRepositoryPostgres(db);
       const token = 'token';
       await AuthenticationsTableTestHelper.addToken(token);
 
