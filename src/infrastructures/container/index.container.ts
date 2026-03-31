@@ -28,6 +28,14 @@ const container = createContainer();
 // registering services and repository
 container.register([
   {
+    key: UuidGenerator.name,
+    Class: UuidGenerator,
+  },
+  {
+    key: JwtAdapter.name,
+    Class: JwtAdapter,
+  },
+  {
     key: UserRepository.name,
     Class: UserRepositoryPostgres,
     parameter: {
@@ -154,4 +162,4 @@ container.register([
   },
 ]);
 
-export default container;
+export { container };
