@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
-    "baseUrl": "./src",
+    "rootDir": ".",
+    "baseUrl": ".",
     "outDir": "./dist",
     "paths": {
-      "@/*": ["./*"]
+      "@/applications*": ["./src/applications/*"],
+      "@/commons*": ["./src/commons/*"],
+      "@/domains*": ["./src/domains/*"],
+      "@/infrastructures*": ["./src/infrastructures/*"],
+      "@/interfaces*": ["./src/interfaces/*"],
+      "@/tests/*": ["./tests/*"]
     },
 
     // Environment Settings
@@ -35,6 +40,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "src/**/*.test.ts"],
+  "include": ["src/**/*", "tests/**/*", "src/**/*.test.ts"],
   "exclude": ["node_modules", "dist"]
 }

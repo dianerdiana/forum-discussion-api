@@ -14,9 +14,8 @@
     "test": "vitest --run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
-    "migrate": "node-pg-migrate -d ./migrations -m ./migrations up",
-    "migrate:create": "node-pg-migrate -j ts -d ./migrations -m ./migrations create",
-    "migrate:down": "node-pg-migrate -d ./migrations -m ./migrations down"
+    "migrate": "node-pg-migrate",
+    "migrate:test": "node-pg-migrate --envPath .test.env"
   },
   "repository": {
     "type": "git",

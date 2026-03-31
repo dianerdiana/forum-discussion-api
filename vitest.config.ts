@@ -4,7 +4,12 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@/applications': path.resolve(__dirname, './src/applications'),
+      '@/commons': path.resolve(__dirname, './src/commons'),
+      '@/domains': path.resolve(__dirname, './src/domains'),
+      '@/infrastructures': path.resolve(__dirname, './src/infrastructures'),
+      '@/interfaces': path.resolve(__dirname, './src/interfaces'),
+      '@/tests': path.resolve(__dirname, './tests'),
     },
   },
   test: {
