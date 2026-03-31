@@ -1,19 +1,6 @@
-import type { JwtPayload } from 'jsonwebtoken';
-
-export class AuthenticationTokenManager {
-  async createRefreshToken(_payload: JwtPayload): Promise<string> {
-    throw new Error('AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED');
-  }
-
-  async createAccessToken(_payload: JwtPayload): Promise<string> {
-    throw new Error('AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED');
-  }
-
-  async verifyRefreshToken(_token: string): Promise<void> {
-    throw new Error('AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED');
-  }
-
-  async decodePayload(_payload: string): Promise<JwtPayload> {
-    throw new Error('AUTHENTICATION_TOKEN_MANAGER.METHOD_NOT_IMPLEMENTED');
-  }
+export interface AuthenticationTokenManager {
+  createRefreshToken: (payload: object) => Promise<string>;
+  createAccessToken: (payload: object) => Promise<string>;
+  verifyRefreshToken: (token: string) => Promise<void>;
+  decodePayload: (payload: string) => Promise<object>;
 }
