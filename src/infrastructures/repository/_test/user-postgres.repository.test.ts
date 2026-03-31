@@ -26,7 +26,7 @@ describe('UserRepositoryPostgres', () => {
       const userRepositoryPostgres = new UserRepositoryPostgres(db, fakeIdGenerator);
 
       // Action & Assert
-      await expect(userRepositoryPostgres.verifyAvailableUsername('dicoding')).rejects.toThrowError(
+      await expect(userRepositoryPostgres.verifyAvailableUsername('dicoding')).rejects.toThrow(
         InvariantError,
       );
     });
@@ -37,9 +37,9 @@ describe('UserRepositoryPostgres', () => {
       const userRepositoryPostgres = new UserRepositoryPostgres(db, fakeIdGenerator);
 
       // Action & Assert
-      await expect(
-        userRepositoryPostgres.verifyAvailableUsername('dicoding'),
-      ).resolves.not.toThrowError(InvariantError);
+      await expect(userRepositoryPostgres.verifyAvailableUsername('dicoding')).resolves.not.toThrow(
+        InvariantError,
+      );
     });
   });
 
@@ -93,7 +93,7 @@ describe('UserRepositoryPostgres', () => {
       const userRepositoryPostgres = new UserRepositoryPostgres(db, fakeIdGenerator);
 
       // Action & Assert
-      return expect(userRepositoryPostgres.getPasswordByUsername('dicoding')).rejects.toThrowError(
+      return expect(userRepositoryPostgres.getPasswordByUsername('dicoding')).rejects.toThrow(
         InvariantError,
       );
     });
@@ -120,7 +120,7 @@ describe('UserRepositoryPostgres', () => {
       const userRepositoryPostgres = new UserRepositoryPostgres(db, fakeIdGenerator);
 
       // Action & Assert
-      await expect(userRepositoryPostgres.getIdByUsername('dicoding')).rejects.toThrowError(
+      await expect(userRepositoryPostgres.getIdByUsername('dicoding')).rejects.toThrow(
         InvariantError,
       );
     });
