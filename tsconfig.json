@@ -5,11 +5,11 @@
     "baseUrl": ".",
     "outDir": "./dist",
     "paths": {
-      "@/applications*": ["./src/applications/*"],
-      "@/commons*": ["./src/commons/*"],
-      "@/domains*": ["./src/domains/*"],
-      "@/infrastructures*": ["./src/infrastructures/*"],
-      "@/interfaces*": ["./src/interfaces/*"],
+      "@/applications/*": ["./src/applications/*"],
+      "@/commons/*": ["./src/commons/*"],
+      "@/domains/*": ["./src/domains/*"],
+      "@/infrastructures/*": ["./src/infrastructures/*"],
+      "@/interfaces/*": ["./src/interfaces/*"],
       "@/tests/*": ["./tests/*"]
     },
 
