@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* istanbul ignore file */
-import { Pool, type PoolClient, type QueryResult, type QueryResultRow } from 'pg';
+import { Pool, type PoolClient, type QueryConfig, type QueryResult, type QueryResultRow } from 'pg';
 
 import config from '@/commons/config.js';
 
@@ -30,10 +30,9 @@ export class Database {
   }
 
   async query<T extends QueryResultRow = any>(
-    text: string,
-    params?: any[],
+    query: QueryConfig | string,
   ): Promise<QueryResult<T>> {
-    return this.pool.query<T>(text, params);
+    return this.pool.query<T>(query);
   }
 
   async getClient(): Promise<PoolClient> {
@@ -60,7 +59,7 @@ export class Database {
   }
 }
 
-export const pool = new Database({
+export const db = new Database({
   host: config.database.host,
   port: config.database.port,
   user: config.database.user,
