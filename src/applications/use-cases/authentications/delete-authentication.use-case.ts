@@ -1,24 +1,27 @@
 import type { AuthenticationDto } from '@/applications/dtos/index.js';
 
-import type { AuthenticationRepository } from '@/domains/index.js';
+import type { AuthenticationDomainService, AuthenticationRepository } from '@/domains/index.js';
 
 export class DeleteAuthenticationUseCase {
-  private readonly _authenticationRepository: AuthenticationRepository;
+  private readonly authenticationDomainService: AuthenticationDomainService;
+  private readonly authenticationRepository: AuthenticationRepository;
 
   constructor({
+    authenticationDomainService,
     authenticationRepository,
   }: {
+    authenticationDomainService: AuthenticationDomainService;
     authenticationRepository: AuthenticationRepository;
   }) {
-    this._authenticationRepository = authenticationRepository;
+    this.authenticationDomainService = authenticationDomainService;
+    this.authenticationRepository = authenticationRepository;
   }
 
   async execute(authDto: AuthenticationDto) {
     const { refreshToken } = authDto;
 
-    const existsToken = await this._authenticationRepository.existsToken(refreshToken);
-    if (!existsToken) throw new Error('Token Invalid');
+    await this.authenticationDomainService.verifyExistingToken(refreshToken);
 
-    await this._authenticationRepository.deleteToken(refreshToken);
+    await this.authenticationRepository.deleteToken(refreshToken);
   }
 }

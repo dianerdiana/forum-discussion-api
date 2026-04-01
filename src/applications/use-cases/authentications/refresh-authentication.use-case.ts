@@ -1,20 +1,20 @@
 import type { AuthenticationDto } from '@/applications/dtos/index.js';
 import type { AuthenticationTokenManager } from '@/applications/security/index.js';
 
-import type { AuthenticationRepository } from '@/domains/index.js';
+import type { AuthenticationDomainService } from '@/domains/index.js';
 
 export class RefreshAuthenticationUseCase {
-  private readonly authenticationRepository: AuthenticationRepository;
+  private readonly authenticationDomainService: AuthenticationDomainService;
   private readonly authenticationTokenManager: AuthenticationTokenManager;
 
   constructor({
-    authenticationRepository,
+    authenticationDomainService,
     authenticationTokenManager,
   }: {
-    authenticationRepository: AuthenticationRepository;
+    authenticationDomainService: AuthenticationDomainService;
     authenticationTokenManager: AuthenticationTokenManager;
   }) {
-    this.authenticationRepository = authenticationRepository;
+    this.authenticationDomainService = authenticationDomainService;
     this.authenticationTokenManager = authenticationTokenManager;
   }
 
@@ -22,7 +22,7 @@ export class RefreshAuthenticationUseCase {
     const { refreshToken } = authenticationDto;
 
     await this.authenticationTokenManager.verifyRefreshToken(refreshToken);
-    await this.authenticationRepository.existsToken(refreshToken);
+    await this.authenticationDomainService.verifyExistingToken(refreshToken);
 
     const { username, userId } = await this.authenticationTokenManager.decodePayload(refreshToken);
 

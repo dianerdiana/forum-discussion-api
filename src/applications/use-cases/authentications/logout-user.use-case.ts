@@ -1,22 +1,24 @@
 import type { AuthenticationDto } from '@/applications/dtos/index.js';
 
-import type { AuthenticationRepository } from '@/domains/index.js';
+import type { AuthenticationDomainService, AuthenticationRepository } from '@/domains/index.js';
 
 export class LogoutUserUseCase {
+  private readonly authenticationDomainService: AuthenticationDomainService;
   private readonly authenticationRepository: AuthenticationRepository;
 
   constructor({
+    authenticationDomainService,
     authenticationRepository,
   }: {
+    authenticationDomainService: AuthenticationDomainService;
     authenticationRepository: AuthenticationRepository;
   }) {
+    this.authenticationDomainService = authenticationDomainService;
     this.authenticationRepository = authenticationRepository;
   }
 
   async execute(authDto: AuthenticationDto) {
-    const existsToken = await this.authenticationRepository.existsToken(authDto.refreshToken);
-
-    if (!existsToken) throw new Error('Token Invalid');
+    await this.authenticationDomainService.verifyExistingToken(authDto.refreshToken);
 
     await this.authenticationRepository.deleteToken(authDto.refreshToken);
   }
