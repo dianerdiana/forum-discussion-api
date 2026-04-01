@@ -16,7 +16,7 @@ export class LogoutUserUseCase {
   async execute(authDto: AuthenticationDto) {
     const existsToken = await this.authenticationRepository.existsToken(authDto.refreshToken);
 
-    if (!existsToken) throw new Error('Invalid token');
+    if (!existsToken) throw new Error('Token Invalid');
 
     await this.authenticationRepository.deleteToken(authDto.refreshToken);
   }
