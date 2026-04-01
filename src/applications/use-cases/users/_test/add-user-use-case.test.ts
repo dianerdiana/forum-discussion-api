@@ -18,54 +18,45 @@ describe('AddUserUseCase', () => {
       fullname: 'Dicoding Indonesia',
     };
 
-    const mockRegisteredUser = {
-      id: 'user-123',
-      username: useCasePayload.username,
-      fullname: useCasePayload.fullname,
-    };
+    const fakeId = 'user-123';
 
-    /** creating dependency of use case */
     const mockUserRepository: UserRepository = {
-      existsUsername: vi.fn(),
-      addUser: vi.fn(),
+      existsUsername: vi.fn().mockResolvedValue(false),
+      addUser: vi.fn().mockResolvedValue(undefined),
       getIdByUsername: vi.fn(),
       getPasswordByUsername: vi.fn(),
     };
+
     const mockPasswordHash: PasswordHash = {
-      hash: vi.fn(),
+      hash: vi.fn().mockResolvedValue('encrypted_password'),
       compare: vi.fn(),
     };
+
     const mockIdGenerator: IdGenerator = {
-      generate: vi.fn(),
+      generate: vi.fn().mockReturnValue(fakeId),
     };
 
-    /** mocking needed function */
-    mockUserRepository.existsUsername = vi.fn().mockImplementation(() => Promise.resolve());
-    mockPasswordHash.hash = vi.fn().mockImplementation(() => Promise.resolve('encrypted_password'));
-    mockUserRepository.addUser = vi
-      .fn()
-      .mockImplementation(() => Promise.resolve(mockRegisteredUser));
-
-    /** creating use case instance */
-    const getUserUseCase = new AddUserUseCase({
+    const addUserUseCase = new AddUserUseCase({
       userRepository: mockUserRepository,
       passwordHash: mockPasswordHash,
       idGenerator: mockIdGenerator,
     });
 
     // Action
-    const registeredUser = await getUserUseCase.execute(useCasePayload);
+    const registeredUser = await addUserUseCase.execute(useCasePayload);
 
     // Assert
     expect(registeredUser).toStrictEqual({
-      id: 'user-123',
+      id: fakeId,
       username: useCasePayload.username,
       fullname: useCasePayload.fullname,
     });
 
     expect(mockUserRepository.existsUsername).toHaveBeenCalledWith(useCasePayload.username);
     expect(mockPasswordHash.hash).toHaveBeenCalledWith(useCasePayload.password);
+
     expect(mockUserRepository.addUser).toHaveBeenCalledWith({
+      id: fakeId,
       username: useCasePayload.username,
       password: 'encrypted_password',
       fullname: useCasePayload.fullname,

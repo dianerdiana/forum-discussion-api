@@ -27,9 +27,16 @@ export class AddUserUseCase {
     const registerUser = new User(id, dto.username, dto.password, dto.fullname);
 
     const existsUsername = await this._userRepository.existsUsername(registerUser.username);
-    if (existsUsername) throw new Error('ADD_USER_USE_CASE.USERNAME_ALREADY_EXISTS');
+    if (existsUsername) throw new Error('ADD_USER_USE_CASE.USERNAME_NOT_AVAILABLE');
 
     const hashPassword = await this._passwordHash.hash(registerUser.password);
-    return this._userRepository.addUser({ ...registerUser, password: hashPassword });
+    const registeredUser = { ...registerUser, password: hashPassword };
+    await this._userRepository.addUser(registeredUser);
+
+    return {
+      id: registeredUser.id,
+      username: registeredUser.username,
+      fullname: registeredUser.fullname,
+    };
   }
 }
