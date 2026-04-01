@@ -1,18 +1,18 @@
-import type { LoginDto } from '@/applications/dtos/authentications/login.dto.js';
-import type { AuthenticationTokenManager } from '@/applications/security/authentication-token-manager.js';
-import type { PasswordHash } from '@/applications/security/password-hash.js';
+import type { LoginDto } from '@/applications/dtos/index.js';
+import type { AuthenticationTokenManager, PasswordHash } from '@/applications/security/index.js';
 
 import {
   Authentication,
   type AuthenticationRepository,
+  Username,
   type UserRepository,
 } from '@/domains/index.js';
 
 export class LoginUserUseCase {
-  private readonly _userRepository: UserRepository;
-  private readonly _authenticationRepository: AuthenticationRepository;
-  private readonly _authenticationTokenManager: AuthenticationTokenManager;
-  private readonly _passwordHash: PasswordHash;
+  private readonly userRepository: UserRepository;
+  private readonly authenticationRepository: AuthenticationRepository;
+  private readonly authentictionTokenManage: AuthenticationTokenManager;
+  private readonly passwordHash: PasswordHash;
 
   constructor({
     userRepository,
@@ -25,31 +25,33 @@ export class LoginUserUseCase {
     authenticationTokenManager: AuthenticationTokenManager;
     passwordHash: PasswordHash;
   }) {
-    this._userRepository = userRepository;
-    this._authenticationRepository = authenticationRepository;
-    this._authenticationTokenManager = authenticationTokenManager;
-    this._passwordHash = passwordHash;
+    this.userRepository = userRepository;
+    this.authenticationRepository = authenticationRepository;
+    this.authentictionTokenManage = authenticationTokenManager;
+    this.passwordHash = passwordHash;
   }
 
-  async execute(dto: LoginDto) {
-    const { username, password } = dto;
+  async execute(loginDto: LoginDto): Promise<{ accessToken: string; refreshToken: string }> {
+    const username = Username.create(loginDto.username);
+    const user = await this.userRepository.findByUsername(username);
 
-    const encryptedPassword = await this._userRepository.getPasswordByUsername(username);
+    if (!user) throw new Error('Invalid credentials');
 
-    await this._passwordHash.compare(password, encryptedPassword);
+    await this.passwordHash.compare(loginDto.password, user.password.value);
 
-    const id = await this._userRepository.getIdByUsername(username);
-
-    const accessToken = await this._authenticationTokenManager.createAccessToken({ username, id });
-    const refreshToken = await this._authenticationTokenManager.createRefreshToken({
-      username,
-      id,
+    const accessToken = await this.authentictionTokenManage.createAccessToken({
+      userId: user.id.value,
+      username: user.username.value,
+    });
+    const refreshToken = await this.authentictionTokenManage.createRefreshToken({
+      userId: user.id.value,
+      username: user.username.value,
     });
 
-    const newAuthentication = new Authentication(refreshToken);
+    const newAuthentication = Authentication.create({ token: refreshToken });
 
-    await this._authenticationRepository.addToken(newAuthentication);
+    const savedToken = await this.authenticationRepository.save(newAuthentication);
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken: savedToken.token.value };
   }
 }
