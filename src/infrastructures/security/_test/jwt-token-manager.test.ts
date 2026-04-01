@@ -2,20 +2,21 @@ import jwt from 'jsonwebtoken';
 import { describe, expect, it, vi } from 'vitest';
 
 import config from '@/commons/config.js';
-import { InvariantError } from '@/commons/exceptions/invariant-error.js';
+import { InvariantError } from '@/commons/index.js';
 
 import type { JwtAdapter } from '../jwt-adapter.js';
 import { JwtTokenManager } from '../jwt-token-manager.js';
 
 describe('JwtTokenManager', () => {
-  describe('createAccessToken function', () => {
+  describe('createAccessToken', () => {
     it('should create accessToken correctly', async () => {
       // Arrange
       const payload = {
+        userId: 'user-123',
         username: 'dicoding',
       };
       const mockJwtToken: JwtAdapter = {
-        sign: vi.fn().mockImplementation(() => 'mock_token'),
+        sign: vi.fn().mockReturnValue('mock_token'),
         decode: vi.fn(),
         verify: vi.fn(),
       };
@@ -30,14 +31,15 @@ describe('JwtTokenManager', () => {
     });
   });
 
-  describe('createRefreshToken function', () => {
+  describe('createRefreshToken', () => {
     it('should create refreshToken correctly', async () => {
       // Arrange
       const payload = {
+        userId: 'user-123',
         username: 'dicoding',
       };
       const mockJwtToken: JwtAdapter = {
-        sign: vi.fn().mockImplementation(() => 'mock_token'),
+        sign: vi.fn().mockReturnValue('mock_token'),
         decode: vi.fn(),
         verify: vi.fn(),
       };
@@ -52,11 +54,14 @@ describe('JwtTokenManager', () => {
     });
   });
 
-  describe('verifyRefreshToken function', () => {
+  describe('verifyRefreshToken', () => {
     it('should throw InvariantError when verification failed', async () => {
       // Arrange
       const jwtTokenManager = new JwtTokenManager(jwt);
-      const accessToken = await jwtTokenManager.createAccessToken({ username: 'dicoding' });
+      const accessToken = await jwtTokenManager.createAccessToken({
+        userId: 'user-123',
+        username: 'dicoding',
+      });
 
       // Action & Assert
       await expect(jwtTokenManager.verifyRefreshToken(accessToken)).rejects.toThrow(InvariantError);
@@ -65,7 +70,10 @@ describe('JwtTokenManager', () => {
     it('should not throw InvariantError when refresh token verified', async () => {
       // Arrange
       const jwtTokenManager = new JwtTokenManager(jwt);
-      const refreshToken = await jwtTokenManager.createRefreshToken({ username: 'dicoding' });
+      const refreshToken = await jwtTokenManager.createRefreshToken({
+        userId: 'user-123',
+        username: 'dicoding',
+      });
 
       // Action & Assert
       await expect(jwtTokenManager.verifyRefreshToken(refreshToken)).resolves.not.toThrow(
@@ -74,17 +82,49 @@ describe('JwtTokenManager', () => {
     });
   });
 
-  describe('decodePayload function', () => {
+  describe('decodePayload', () => {
     it('should decode payload correctly', async () => {
       // Arrange
       const jwtTokenManager = new JwtTokenManager(jwt);
-      const accessToken = await jwtTokenManager.createAccessToken({ username: 'dicoding' });
+      const accessToken = await jwtTokenManager.createAccessToken({
+        userId: 'user-123',
+        username: 'dicoding',
+      });
 
       // Action
-      const { username: expectedUsername } = await jwtTokenManager.decodePayload(accessToken);
+      const payload = await jwtTokenManager.decodePayload(accessToken);
+
+      // Assert
+      expect(payload).toStrictEqual({
+        userId: 'user-123',
+        username: 'dicoding',
+      });
+    });
+
+    it('should throw InvariantError when payload is not valid object', async () => {
+      // Arrange
+      const mockJwtToken: JwtAdapter = {
+        sign: vi.fn(),
+        decode: vi.fn().mockReturnValue('invalid_payload'),
+        verify: vi.fn(),
+      };
+      const jwtTokenManager = new JwtTokenManager(mockJwtToken);
 
       // Action & Assert
-      expect(expectedUsername).toEqual('dicoding');
+      await expect(jwtTokenManager.decodePayload('token')).rejects.toThrow(InvariantError);
+    });
+
+    it('should throw InvariantError when payload misses required fields', async () => {
+      // Arrange
+      const mockJwtToken: JwtAdapter = {
+        sign: vi.fn(),
+        decode: vi.fn().mockReturnValue({ username: 'dicoding' }),
+        verify: vi.fn(),
+      };
+      const jwtTokenManager = new JwtTokenManager(mockJwtToken);
+
+      // Action & Assert
+      await expect(jwtTokenManager.decodePayload('token')).rejects.toThrow(InvariantError);
     });
   });
 });
