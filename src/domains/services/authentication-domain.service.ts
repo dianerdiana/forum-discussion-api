@@ -12,7 +12,7 @@ export class AuthenticationDomainService {
   }
 
   async verifyExistingToken(token: string): Promise<void> {
-    const existingToken = await this.authenticationRepository.existsToken(token);
+    const existingToken = await this.authenticationRepository.existsByToken(token);
 
     if (!existingToken) throw new Error('Token Invalid');
   }
