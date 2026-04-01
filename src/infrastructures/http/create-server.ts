@@ -1,8 +1,7 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import type { Container } from 'instances-container';
 
-import { ClientError } from '@/commons/exceptions/client-error.js';
-import { DomainErrorTranslator } from '@/commons/exceptions/domain-error-translator.js';
+import { ClientError, DomainErrorTranslator } from '@/commons/index.js';
 
 import authentication from '@/interfaces/http/api/authentication/index.js';
 import user from '@/interfaces/http/api/user/index.js';
