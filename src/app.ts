@@ -1,6 +1,6 @@
 import config from './commons/config.js';
-import { container } from './infrastructures/container/index.container.js';
 import { createServer } from './infrastructures/http/create-server.js';
+import { container } from './infrastructures/index.js';
 
 import 'dotenv/config';
 
