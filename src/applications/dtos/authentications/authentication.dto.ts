@@ -1,1 +1,3 @@
-export type AuthenticationDto = { refreshToken: string };
+export interface AuthenticationDto {
+  refreshToken: string;
+}
