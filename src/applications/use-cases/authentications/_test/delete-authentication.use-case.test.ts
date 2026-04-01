@@ -14,7 +14,7 @@ describe('DeleteAuthenticationUseCase', () => {
     const mockAuthenticationRepository: AuthenticationRepository = {
       save: vi.fn(),
       deleteToken: vi.fn().mockResolvedValue(undefined),
-      existsToken: vi.fn().mockResolvedValue(true),
+      existsByToken: vi.fn().mockResolvedValue(true),
     };
     const mockAuthenticationDomainService = {
       verifyExistingToken: vi.fn().mockRejectedValue(new Error('Token Invalid')),
@@ -45,7 +45,7 @@ describe('DeleteAuthenticationUseCase', () => {
     const mockAuthenticationRepository: AuthenticationRepository = {
       save: vi.fn(),
       deleteToken: vi.fn().mockResolvedValue(undefined),
-      existsToken: vi.fn().mockResolvedValue(true),
+      existsByToken: vi.fn().mockResolvedValue(true),
     };
     const mockAuthenticationDomainService = {
       verifyExistingToken: vi.fn().mockResolvedValue(undefined),

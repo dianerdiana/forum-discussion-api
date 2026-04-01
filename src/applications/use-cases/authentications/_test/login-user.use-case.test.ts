@@ -43,7 +43,7 @@ describe('LoginUserUseCase', () => {
     const mockAuthenticationRepository: AuthenticationRepository = {
       save: vi.fn().mockResolvedValue(authentication),
       deleteToken: vi.fn(),
-      existsToken: vi.fn(),
+      existsByToken: vi.fn(),
     };
     const mockAuthenticationTokenManager: AuthenticationTokenManager = {
       createAccessToken: vi.fn().mockResolvedValue(mockedAuthentication.accessToken),
