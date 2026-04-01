@@ -1,8 +1,9 @@
-import type { User } from '../entities/user.js';
+import type { User } from '../entities/index.js';
+import type { UserId, Username } from '../value-objects/index.js';
 
 export interface UserRepository {
-  addUser(user: User): Promise<void>;
-  existsUsername(username: string): Promise<boolean>;
-  getPasswordByUsername(username: string): Promise<string>;
-  getIdByUsername(username: string): Promise<string>;
+  save(payload: User): Promise<User>;
+  findById(id: UserId): Promise<User | null>;
+  findByUsername(username: Username): Promise<User | null>;
+  existsByUsername(username: Username): Promise<boolean>;
 }
