@@ -1,23 +1,22 @@
-import { PasswordHash } from '@/applications/security/password-hash.js';
+import type { PasswordHash } from '@/applications/security/password-hash.js';
 
 import { AuthenticationError } from '@/commons/exceptions/authentication-error.js';
 
-export class BcryptPasswordHash extends PasswordHash {
-  private readonly _bcrypt: typeof import('bcrypt');
-  private readonly _saltRound: number;
+export class BcryptPasswordHash implements PasswordHash {
+  private readonly bcrypt: typeof import('bcrypt');
+  private readonly saltRound: number;
 
   constructor(bcrypt: typeof import('bcrypt'), saltRound: number = 10) {
-    super();
-    this._bcrypt = bcrypt;
-    this._saltRound = saltRound;
+    this.bcrypt = bcrypt;
+    this.saltRound = saltRound;
   }
 
   async hash(password: string): Promise<string> {
-    return this._bcrypt.hash(password, this._saltRound);
+    return this.bcrypt.hash(password, this.saltRound);
   }
 
-  async comparePassword(password: string, hashedPassword: string): Promise<boolean> {
-    const result = await this._bcrypt.compare(password, hashedPassword);
+  async compare(password: string, hashedPassword: string): Promise<boolean> {
+    const result = await this.bcrypt.compare(password, hashedPassword);
 
     if (!result) {
       throw new AuthenticationError('kredensial yang Anda masukkan salah');
