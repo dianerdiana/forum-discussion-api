@@ -13,11 +13,11 @@ export class DeleteAuthenticationUseCase {
     this._authenticationRepository = authenticationRepository;
   }
 
-  async execute(dto: AuthenticationDto) {
-    const { refreshToken } = dto;
+  async execute(authDto: AuthenticationDto) {
+    const { refreshToken } = authDto;
 
     const existsToken = await this._authenticationRepository.existsToken(refreshToken);
-    if (!existsToken) throw new Error('DELETE_AUTHENTICATION_USE_CASE.TOKEN_INVALID');
+    if (!existsToken) throw new Error('Token Invalid');
 
     await this._authenticationRepository.deleteToken(refreshToken);
   }
