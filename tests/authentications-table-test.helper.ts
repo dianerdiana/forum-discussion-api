@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { db } from '../src/infrastructures/database/postgres/db.js';
+import { db } from '../src/infrastructures/database/postgres.js';
 
 export const AuthenticationsTableTestHelper = {
   async addToken(token: string) {
