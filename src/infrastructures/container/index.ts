@@ -6,4 +6,8 @@ import { serviceContainer } from './service.container.js';
 import { useCaseContainer } from './use-case.container.js';
 
 // creating container
-export const container = createContainer().register([...serviceContainer, ...useCaseContainer]);
+const container = createContainer();
+
+container.register([...serviceContainer, ...useCaseContainer]);
+
+export { container };
