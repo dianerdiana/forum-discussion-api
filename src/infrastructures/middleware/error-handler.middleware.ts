@@ -16,6 +16,8 @@ export const errorHandlerMiddleware = (
 
       if (issue?.code === 'invalid_type') {
         message = `${issue.path} ${issue.expected}`;
+      } else if (issue?.code === 'invalid_value') {
+        message = `${issue.message}`;
       }
 
       return res.status(4000).json({

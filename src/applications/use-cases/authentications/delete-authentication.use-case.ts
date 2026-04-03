@@ -24,4 +24,6 @@ export class DeleteAuthenticationUseCase {
 
     await this.authenticationRepository.deleteToken(refreshToken);
   }
+
+  private validateDto(authDto: AuthenticationDto) {}
 }
