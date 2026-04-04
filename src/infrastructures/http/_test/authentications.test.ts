@@ -47,8 +47,6 @@ describe('HTTP server', () => {
 
       const response = await request(app).post('/authentications').send(requestPayload);
 
-      console.log(response.error);
-
       expect(response.status).toEqual(201);
       expect(response.body.status).toEqual('success');
       expect(response.body.data.accessToken).toBeDefined();
