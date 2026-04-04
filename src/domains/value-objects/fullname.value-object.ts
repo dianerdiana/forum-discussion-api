@@ -1,3 +1,5 @@
+import { DomainError } from '../commons/domain-error.js';
+
 export class Fullname {
   private readonly _value: string;
 
@@ -8,21 +10,21 @@ export class Fullname {
 
   private validate(): void {
     if (!this._value || this._value.length === 0) {
-      throw new Error('Fullname cannot be empty');
+      throw new DomainError('fullname cannot be empty');
     }
 
     if (this._value.length < 2) {
-      throw new Error('Fullname must be at least 2 characters long');
+      throw new DomainError('fullname must be at least 2 characters long');
     }
 
     if (this._value.length > 100) {
-      throw new Error('Fullname cannot exceed 100 characters');
+      throw new DomainError('fullname cannot exceed 100 characters');
     }
 
     // Allow letters, spaces, hyphens, and apostrophes
     const nameRegex = /^[a-zA-Z\s\-']+$/;
     if (!nameRegex.test(this._value)) {
-      throw new Error('Fullname contains invalid characters');
+      throw new DomainError('fullname contains invalid characters');
     }
   }
 

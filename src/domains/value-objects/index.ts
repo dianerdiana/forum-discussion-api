@@ -1,4 +1,3 @@
-export { Email } from './email.value-object.js';
 export { Fullname } from './fullname.value-object.js';
 export { Password } from './password.value-object.js';
 export { Token } from './token.value-object.js';

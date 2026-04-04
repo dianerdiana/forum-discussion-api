@@ -1,3 +1,5 @@
+import { DomainError } from '../commons/domain-error.js';
+
 export class Password {
   private readonly _value: string;
 
@@ -8,11 +10,11 @@ export class Password {
 
   private validate(): void {
     if (!this._value || this._value.length === 0) {
-      throw new Error('Password cannot be empty');
+      throw new DomainError('password cannot be empty');
     }
 
     if (this._value.length < 6) {
-      throw new Error('Password must be at least 6 characters long');
+      throw new DomainError('password must be at least 6 characters long');
     }
   }
 

@@ -1,3 +1,5 @@
+import { DomainError } from '../commons/index.js';
+
 export class Token {
   private readonly _value: string;
 
@@ -8,7 +10,7 @@ export class Token {
 
   private validate(): void {
     if (!this._value || this._value.trim().length === 0) {
-      throw new Error('Token cannot be empty');
+      throw new DomainError('token cannot be empty');
     }
   }
 

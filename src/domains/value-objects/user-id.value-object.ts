@@ -1,5 +1,7 @@
 import { v7 as uuidv7 } from 'uuid';
 
+import { DomainError } from '../commons/domain-error.js';
+
 export class UserId {
   private readonly _value: string;
 
@@ -10,7 +12,7 @@ export class UserId {
 
   private validate(): void {
     if (!this._value || this._value.trim().length === 0) {
-      throw new Error('UserId cannot be empty');
+      throw new DomainError('user id cannot be empty');
     }
   }
 
