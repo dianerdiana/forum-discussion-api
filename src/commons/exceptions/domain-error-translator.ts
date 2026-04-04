@@ -37,6 +37,7 @@ DomainErrorTranslator._directories = {
   'USERNAME.INVALID_CHARACTER': new InvariantError('username contains invalid characters'),
 
   'USER_ID.EMPTY': new InvariantError('user id cannot be empty'),
+  'REFRESH_TOKEN.NOT_REGISTERED': new InvariantError('refresh token is not registered in database'),
 };
 
 export { DomainErrorTranslator };

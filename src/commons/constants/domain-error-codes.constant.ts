@@ -19,6 +19,8 @@ export const DOMAIN_ERROR_CODES = [
   'USERNAME.INVALID_CHARACTER',
 
   'USER_ID.EMPTY',
+
+  'REFRESH_TOKEN.NOT_REGISTERED',
 ] as const;
 
 export type DomainErrorCode = (typeof DOMAIN_ERROR_CODES)[number];
