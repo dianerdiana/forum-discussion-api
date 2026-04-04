@@ -38,7 +38,6 @@ export class LoginUserUseCase {
     const { password, username } = this.validateDto(loginDto);
 
     const user = await this.userRepository.findByUsername(username);
-
     if (!user) throw new AuthenticationError('invalid credentials');
 
     await this.passwordHash.compare(password.value, user.password.value);
@@ -63,6 +62,9 @@ export class LoginUserUseCase {
     username: Username;
     password: Password;
   } {
+    if (!username || !password)
+      throw new AuthenticationError('username and password must not be empty');
+
     const validatedPassword = Password.create(password);
     const validatedUsername = Username.create(username);
 
