@@ -49,7 +49,7 @@ describe('Users Route', () => {
       // Assert
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('username is required');
+      expect(response.body.message).toEqual('username must be a string');
     });
 
     it('should response 400 when request payload not meet data type specification', async () => {
@@ -85,7 +85,44 @@ describe('Users Route', () => {
       // Assert
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('username is too long (max 50)');
+      expect(response.body.message).toEqual('username cannot exceed 50 characters');
+    });
+
+    it('should response 400 when username contain restricted character', async () => {
+      // Arrange
+      const requestPayload = {
+        username: 'dicoding indonesia',
+        password: 'secret',
+        fullname: 'Dicoding Indonesia',
+      };
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app).post('/users').send(requestPayload);
+
+      // Assert
+      expect(response.status).toEqual(400);
+      expect(response.body.status).toEqual('fail');
+      expect(response.body.message).toEqual('username contains invalid characters');
+    });
+
+    it('should response 400 when username unavailable', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ username: 'dicoding' });
+      const requestPayload = {
+        username: 'dicoding',
+        fullname: 'Dicoding Indonesia',
+        password: 'super_secret',
+      };
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app).post('/users').send(requestPayload);
+
+      // Assert
+      expect(response.status).toEqual(400);
+      expect(response.body.status).toEqual('fail');
+      expect(response.body.message).toEqual('username is not available');
     });
   });
 });

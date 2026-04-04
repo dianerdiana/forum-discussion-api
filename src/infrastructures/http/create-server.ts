@@ -3,8 +3,6 @@ import type { Container } from 'instances-container';
 
 import { ClientError, DomainErrorTranslator } from '@/commons/index.js';
 
-import { DomainError } from '@/domains/index.js';
-
 import authentication from '@/interfaces/http/api/authentication/index.js';
 import user from '@/interfaces/http/api/user/index.js';
 
@@ -23,13 +21,6 @@ export const createServer = async (container: Container) => {
   app.use((error: any, _req: Request, res: Response, _next: NextFunction) => {
     // bila response tersebut error, tangani sesuai kebutuhan
     const translatedError = DomainErrorTranslator.translate(error);
-
-    if (error instanceof DomainError) {
-      return res.status(400).json({
-        status: 'fail',
-        message: error.message,
-      });
-    }
 
     // penanganan client error secara internal.
     if (translatedError instanceof ClientError) {
