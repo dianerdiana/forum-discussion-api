@@ -1,3 +1,4 @@
+import { DomainError } from '../commons/domain-error.js';
 import type { AuthenticationRepository } from '../repositories/authentication.repository.js';
 
 export class AuthenticationDomainService {
@@ -14,6 +15,6 @@ export class AuthenticationDomainService {
   async verifyExistingToken(token: string): Promise<void> {
     const existingToken = await this.authenticationRepository.existsByToken(token);
 
-    if (!existingToken) throw new Error('token invalid');
+    if (!existingToken) throw new DomainError('REFRESH_TOKEN.NOT_REGISTERED');
   }
 }
