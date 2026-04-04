@@ -1,5 +1,7 @@
 import type { AuthenticationDto } from '@/applications/dtos/index.js';
 
+import { InvariantError } from '@/commons/index.js';
+
 import type { AuthenticationDomainService, AuthenticationRepository } from '@/domains/index.js';
 
 export class DeleteAuthenticationUseCase {
@@ -18,6 +20,7 @@ export class DeleteAuthenticationUseCase {
   }
 
   async execute(authDto: AuthenticationDto) {
+    this.validateDto(authDto);
     const { refreshToken } = authDto;
 
     await this.authenticationDomainService.verifyExistingToken(refreshToken);
@@ -25,5 +28,9 @@ export class DeleteAuthenticationUseCase {
     await this.authenticationRepository.deleteToken(refreshToken);
   }
 
-  private validateDto(authDto: AuthenticationDto) {}
+  private validateDto({ refreshToken }: AuthenticationDto): void {
+    if (!refreshToken) throw new InvariantError('refresh token is required');
+    if (typeof refreshToken !== 'string')
+      throw new InvariantError('refresh token must be a string');
+  }
 }

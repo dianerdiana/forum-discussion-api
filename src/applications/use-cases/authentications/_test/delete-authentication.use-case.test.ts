@@ -17,7 +17,7 @@ describe('DeleteAuthenticationUseCase', () => {
       existsByToken: vi.fn().mockResolvedValue(true),
     };
     const mockAuthenticationDomainService = {
-      verifyExistingToken: vi.fn().mockRejectedValue(new Error('Token Invalid')),
+      verifyExistingToken: vi.fn().mockRejectedValue(new Error('token invalid')),
     } as unknown as AuthenticationDomainService;
 
     const deleteAuthenticationUseCase = new DeleteAuthenticationUseCase({
@@ -27,7 +27,7 @@ describe('DeleteAuthenticationUseCase', () => {
 
     // Act
     await expect(deleteAuthenticationUseCase.execute(deleteAuthenticationDto)).rejects.toThrow(
-      'Token Invalid',
+      'token invalid',
     );
 
     // Assert
