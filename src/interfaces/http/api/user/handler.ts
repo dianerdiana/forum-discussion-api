@@ -3,6 +3,8 @@ import type { Container } from 'instances-container';
 
 import { CreateUserUseCase } from '@/applications/index.js';
 
+import { RESPONSE_STATUS } from '@/commons/index.js';
+
 export class UserHandler {
   private readonly container: Container;
 
@@ -18,7 +20,7 @@ export class UserHandler {
       const addedUser = await addUserUseCase.execute(req.body);
 
       res.status(201).json({
-        status: 'success',
+        status: RESPONSE_STATUS.success,
         data: {
           addedUser,
         },
