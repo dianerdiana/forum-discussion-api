@@ -26,7 +26,7 @@ export class JwtTokenManager implements AuthenticationTokenManager {
     try {
       this.jwt.verify(token, config.auth.refreshTokenKey);
     } catch {
-      throw new InvariantError('Refresh Token Invalid');
+      throw new InvariantError('invalid refresh token');
     }
   }
 
@@ -34,11 +34,11 @@ export class JwtTokenManager implements AuthenticationTokenManager {
     const payload = this.jwt.decode(token);
 
     if (!payload || typeof payload === 'string') {
-      throw new InvariantError('Payload Invalid');
+      throw new InvariantError('invalid token');
     }
 
     if (typeof payload.userId !== 'string' || typeof payload.username !== 'string') {
-      throw new InvariantError('Payload Invalid');
+      throw new InvariantError('invalid token');
     }
 
     return { userId: payload.userId, username: payload.username };
