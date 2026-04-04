@@ -1,9 +1,12 @@
 import type { LoginDto } from '@/applications/dtos/index.js';
 import type { AuthenticationTokenManager, PasswordHash } from '@/applications/security/index.js';
 
+import { AuthenticationError } from '@/commons/index.js';
+
 import {
   Authentication,
   type AuthenticationRepository,
+  Password,
   Username,
   type UserRepository,
 } from '@/domains/index.js';
@@ -32,12 +35,13 @@ export class LoginUserUseCase {
   }
 
   async execute(loginDto: LoginDto): Promise<{ accessToken: string; refreshToken: string }> {
-    const username = Username.create(loginDto.username);
+    const { password, username } = this.validateDto(loginDto);
+
     const user = await this.userRepository.findByUsername(username);
 
-    if (!user) throw new Error('Invalid credentials');
+    if (!user) throw new AuthenticationError('invalid credentials');
 
-    await this.passwordHash.compare(loginDto.password, user.password.value);
+    await this.passwordHash.compare(password.value, user.password.value);
 
     const accessToken = await this.authentictionTokenManage.createAccessToken({
       userId: user.id.value,
@@ -53,5 +57,15 @@ export class LoginUserUseCase {
     const savedToken = await this.authenticationRepository.save(newAuthentication);
 
     return { accessToken, refreshToken: savedToken.token.value };
+  }
+
+  private validateDto({ password, username }: LoginDto): {
+    username: Username;
+    password: Password;
+  } {
+    const validatedPassword = Password.create(password);
+    const validatedUsername = Username.create(username);
+
+    return { password: validatedPassword, username: validatedUsername };
   }
 }
