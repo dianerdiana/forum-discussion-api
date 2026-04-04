@@ -4,17 +4,21 @@ export class Password {
   private readonly _value: string;
 
   constructor(value: string) {
-    this._value = value?.trim();
+    if (typeof value !== 'string') {
+      throw new DomainError('PASSWORD.NOT_STRING');
+    }
+
+    this._value = value.trim();
     this.validate();
   }
 
   private validate(): void {
     if (!this._value || this._value.length === 0) {
-      throw new DomainError('password cannot be empty');
+      throw new DomainError('PASSWORD.EMPTY');
     }
 
     if (this._value.length < 6) {
-      throw new DomainError('password must be at least 6 characters long');
+      throw new DomainError('PASSWORD.TOO_SHORT');
     }
   }
 

@@ -12,7 +12,7 @@ export class UserId {
 
   private validate(): void {
     if (!this._value || this._value.trim().length === 0) {
-      throw new DomainError('user id cannot be empty');
+      throw new DomainError('USER_ID.EMPTY');
     }
   }
 

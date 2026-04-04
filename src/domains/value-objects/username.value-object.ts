@@ -4,27 +4,31 @@ export class Username {
   private readonly _value: string;
 
   constructor(value: string) {
-    this._value = value?.trim();
+    if (typeof value !== 'string') {
+      throw new DomainError('USERNAME.NOT_STRING');
+    }
+
+    this._value = value.trim();
     this.validate();
   }
 
   private validate(): void {
     if (!this._value || this._value.length === 0) {
-      throw new DomainError('username cannot be empty');
+      throw new DomainError('USERNAME.EMPTY');
     }
 
     if (this._value.length < 2) {
-      throw new DomainError('username must be at least 2 characters long');
+      throw new DomainError('USERNAME.TOO_SHORT');
     }
 
-    if (this._value.length > 100) {
-      throw new DomainError('username cannot exceed 100 characters');
+    if (this._value.length > 50) {
+      throw new DomainError('USERNAME.TOO_LONG');
     }
 
-    // Allow letters, spaces, hyphens, and apostrophes
-    const nameRegex = /^[a-zA-Z\s\-']+$/;
-    if (!nameRegex.test(this._value)) {
-      throw new DomainError('username contains invalid characters');
+    // Allow only alphanumeric characters and underscores (no spaces)
+    const usernameRegex = /^[\w]+$/;
+    if (!usernameRegex.test(this._value)) {
+      throw new DomainError('USERNAME.INVALID_CHARACTER');
     }
   }
 

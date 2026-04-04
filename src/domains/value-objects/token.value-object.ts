@@ -4,13 +4,17 @@ export class Token {
   private readonly _value: string;
 
   constructor(value: string) {
-    this._value = value;
+    if (typeof value !== 'string') {
+      throw new DomainError('TOKEN.NOT_STRING');
+    }
+
+    this._value = value.trim();
     this.validate();
   }
 
   private validate(): void {
     if (!this._value || this._value.trim().length === 0) {
-      throw new DomainError('token cannot be empty');
+      throw new DomainError('TOKEN.EMPTY');
     }
   }
 
