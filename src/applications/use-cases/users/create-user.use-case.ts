@@ -1,6 +1,8 @@
 import type { CreateUserDto } from '@/applications/dtos/index.js';
 import type { PasswordHash } from '@/applications/security/index.js';
 
+import { InvariantError } from '@/commons/index.js';
+
 import { User, Username, type UserRepository } from '@/domains/index.js';
 
 export class CreateUserUseCase {
@@ -26,7 +28,7 @@ export class CreateUserUseCase {
     const username = Username.create(createUserDto.username);
 
     const existsUsername = await this.userRepository.existsByUsername(username);
-    if (existsUsername) throw new Error('Username is not available');
+    if (existsUsername) throw new InvariantError('username is not available');
 
     const hashPassword = await this.passwordHash.hash(createUserDto.password);
     const user = User.create({
