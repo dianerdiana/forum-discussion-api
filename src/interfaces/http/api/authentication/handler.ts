@@ -7,6 +7,8 @@ import {
   RefreshAuthenticationUseCase,
 } from '@/applications/index.js';
 
+import { RESPONSE_STATUS } from '@/commons/index.js';
+
 export class AuthenticationHandler {
   private readonly container: Container;
 
@@ -24,7 +26,7 @@ export class AuthenticationHandler {
       const { accessToken, refreshToken } = await loginUserUseCase.execute(req.body);
 
       res.status(201).json({
-        status: 'success',
+        status: RESPONSE_STATUS.success,
         data: {
           accessToken,
           refreshToken,
@@ -43,7 +45,7 @@ export class AuthenticationHandler {
       const accessToken = await refreshAuthenticationUseCase.execute(req.body);
 
       res.json({
-        status: 'success',
+        status: RESPONSE_STATUS.success,
         data: {
           accessToken,
         },
@@ -59,7 +61,7 @@ export class AuthenticationHandler {
       await logoutUserUseCase.execute(req.body);
 
       res.json({
-        status: 'success',
+        status: RESPONSE_STATUS.success,
       });
     } catch (error) {
       next(error);
