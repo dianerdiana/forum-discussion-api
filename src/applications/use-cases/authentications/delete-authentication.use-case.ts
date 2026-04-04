@@ -20,17 +20,18 @@ export class DeleteAuthenticationUseCase {
   }
 
   async execute(authDto: AuthenticationDto) {
-    this.validateDto(authDto);
-    const { refreshToken } = authDto;
+    const { refreshToken } = this.validateDto(authDto);
 
     await this.authenticationDomainService.verifyExistingToken(refreshToken);
 
     await this.authenticationRepository.deleteToken(refreshToken);
   }
 
-  private validateDto({ refreshToken }: AuthenticationDto): void {
+  private validateDto({ refreshToken }: AuthenticationDto): { refreshToken: string } {
     if (!refreshToken) throw new InvariantError('refresh token is required');
     if (typeof refreshToken !== 'string')
       throw new InvariantError('refresh token must be a string');
+
+    return { refreshToken };
   }
 }
