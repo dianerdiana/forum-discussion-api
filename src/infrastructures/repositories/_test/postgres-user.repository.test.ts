@@ -45,14 +45,14 @@ describe('PostgresUserRepository', () => {
       const userRepository = new PostgresUserRepository(db);
       await UsersTableTestHelper.addUser({
         id: 'user-123',
-        username: 'old-username',
+        username: 'old_username',
         fullname: 'Old Fullname',
         password: 'old-password',
       });
 
       const updatedUser = User.create({
         id: 'user-123',
-        username: 'new-username',
+        username: 'new_username',
         fullname: 'New Fullname',
         password: 'new-password',
       });
@@ -65,13 +65,13 @@ describe('PostgresUserRepository', () => {
       expect(users).toHaveLength(1);
       expect(users[0]).toMatchObject({
         id: 'user-123',
-        username: 'new-username',
+        username: 'new_username',
         fullname: 'New Fullname',
         password: 'new-password',
       });
 
       expect(result.id.value).toBe('user-123');
-      expect(result.username.value).toBe('new-username');
+      expect(result.username.value).toBe('new_username');
       expect(result.fullname.value).toBe('New Fullname');
       expect(result.password.value).toBe('new-password');
     });
@@ -115,7 +115,7 @@ describe('PostgresUserRepository', () => {
 
       // Action & Assert
       await expect(
-        userRepository.findByUsername(Username.create('not-registered')),
+        userRepository.findByUsername(Username.create('not_registered')),
       ).resolves.toBeNull();
     });
 
@@ -147,7 +147,7 @@ describe('PostgresUserRepository', () => {
       const userRepository = new PostgresUserRepository(db);
 
       // Action
-      const result = await userRepository.existsByUsername(Username.create('not-registered'));
+      const result = await userRepository.existsByUsername(Username.create('not_registered'));
 
       // Assert
       expect(result).toBe(false);
