@@ -23,7 +23,7 @@ describe('PostgresUserRepository', () => {
         id: 'user-123',
         username: 'dicoding',
         fullname: 'Dicoding Indonesia',
-        password: 'secret',
+        password: 'secret_pass',
       });
 
       // Action
@@ -36,7 +36,7 @@ describe('PostgresUserRepository', () => {
         id: 'user-123',
         username: 'dicoding',
         fullname: 'Dicoding Indonesia',
-        password: 'secret',
+        password: 'secret_pass',
       });
     });
 
@@ -93,7 +93,7 @@ describe('PostgresUserRepository', () => {
         id: 'user-123',
         username: 'dicoding',
         fullname: 'Dicoding Indonesia',
-        password: 'secret',
+        password: 'secret_pass',
       });
 
       // Action
@@ -104,7 +104,7 @@ describe('PostgresUserRepository', () => {
       expect(result?.id.value).toBe('user-123');
       expect(result?.username.value).toBe('dicoding');
       expect(result?.fullname.value).toBe('Dicoding Indonesia');
-      expect(result?.password.value).toBe('secret');
+      expect(result?.password.value).toBe('secret_pass');
     });
   });
 
@@ -126,7 +126,7 @@ describe('PostgresUserRepository', () => {
         id: 'user-123',
         username: 'dicoding',
         fullname: 'Dicoding Indonesia',
-        password: 'secret',
+        password: 'secret_pass',
       });
 
       // Action
@@ -137,7 +137,7 @@ describe('PostgresUserRepository', () => {
       expect(result?.id.value).toBe('user-123');
       expect(result?.username.value).toBe('dicoding');
       expect(result?.fullname.value).toBe('Dicoding Indonesia');
-      expect(result?.password.value).toBe('secret');
+      expect(result?.password.value).toBe('secret_pass');
     });
   });
 
