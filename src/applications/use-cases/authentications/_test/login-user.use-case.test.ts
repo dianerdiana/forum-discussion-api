@@ -17,7 +17,7 @@ describe('LoginUserUseCase', () => {
     // Arrange
     const useCasePayload = {
       username: 'dicoding',
-      password: 'secret',
+      password: 'secret_pass',
     };
 
     const user = User.create({
@@ -73,7 +73,7 @@ describe('LoginUserUseCase', () => {
       refreshToken: 'refresh_token',
     });
     expect(mockUserRepository.findByUsername).toHaveBeenCalledWith(Username.create('dicoding'));
-    expect(mockPasswordHash.compare).toHaveBeenCalledWith('secret', 'hashed_password');
+    expect(mockPasswordHash.compare).toHaveBeenCalledWith('secret_pass', 'hashed_password');
     expect(mockAuthenticationTokenManager.createAccessToken).toHaveBeenCalledWith({
       userId: 'user-123',
       username: 'dicoding',

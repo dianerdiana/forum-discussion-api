@@ -14,7 +14,7 @@ describe('CreateUserUseCase', () => {
     // Arrange
     const useCasePayload = {
       username: 'dicoding',
-      password: 'secret',
+      password: 'secret_pass',
       fullname: 'Dicoding Indonesia',
     };
 
