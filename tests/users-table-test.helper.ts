@@ -5,7 +5,7 @@ export const UsersTableTestHelper = {
   async addUser({
     id = 'user-123',
     username = 'dicoding',
-    password = 'secret',
+    password = 'secret_pass',
     fullname = 'Dicoding Indonesia',
   }) {
     const query = {
