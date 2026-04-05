@@ -52,7 +52,7 @@ describe('BcryptPasswordHash', () => {
     it('should not return AuthenticationError if password match', async () => {
       // Arrange
       const bcryptPasswordHash = new BcryptPasswordHash(bcrypt);
-      const plainPassword = 'secret';
+      const plainPassword = 'secret_pass';
       const encryptedPassword = await bcryptPasswordHash.hash(plainPassword);
 
       // Act & Assert
