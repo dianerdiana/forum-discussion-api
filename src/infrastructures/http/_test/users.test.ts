@@ -21,7 +21,7 @@ describe('Users Route', () => {
       // Arrange
       const requestPayload = {
         username: 'dicoding',
-        password: 'secret',
+        password: 'secret_pass',
         fullname: 'Dicoding Indonesia',
       };
       const app = await createServer(container);
@@ -39,7 +39,7 @@ describe('Users Route', () => {
       // Arrange
       const requestPayload = {
         fullname: 'Dicoding Indonesia',
-        password: 'secret',
+        password: 'secret_pass',
       };
       const app = await createServer(container);
 
@@ -56,7 +56,7 @@ describe('Users Route', () => {
       // Arrange
       const requestPayload = {
         username: 'dicoding',
-        password: 'secret',
+        password: 'secret_pass',
         fullname: ['Dicoding Indonesia'],
       };
       const app = await createServer(container);
@@ -74,7 +74,7 @@ describe('Users Route', () => {
       // Arrange
       const requestPayload = {
         username: 'dicodingindonesiadicodingindonesiadicodingindonesiadicoding',
-        password: 'secret',
+        password: 'secret_pass',
         fullname: 'Dicoding Indonesia',
       };
       const app = await createServer(container);
@@ -92,7 +92,7 @@ describe('Users Route', () => {
       // Arrange
       const requestPayload = {
         username: 'dicoding indonesia',
-        password: 'secret',
+        password: 'secret_pass',
         fullname: 'Dicoding Indonesia',
       };
       const app = await createServer(container);

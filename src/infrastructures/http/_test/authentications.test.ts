@@ -33,20 +33,23 @@ describe('HTTP server', () => {
 
   describe('when POST /authentications', () => {
     it('should response 201 and new authentication', async () => {
+      // Arrange
       const requestPayload = {
-        username: 'dicoding',
-        password: 'secret_pass',
+        username: 'dicoding_auth',
+        password: 'secret_pass_auth',
       };
       const app = await createServer(container);
 
+      // Action
       await request(app).post('/users').send({
-        username: 'dicoding',
-        password: 'secret_pass',
+        username: 'dicoding_auth',
+        password: 'secret_pass_auth',
         fullname: 'Dicoding Indonesia',
       });
 
       const response = await request(app).post('/authentications').send(requestPayload);
 
+      // Assert
       expect(response.status).toEqual(201);
       expect(response.body.status).toEqual('success');
       expect(response.body.data.accessToken).toBeDefined();
@@ -54,26 +57,31 @@ describe('HTTP server', () => {
     });
 
     it('should response 401 if username not found', async () => {
+      // Arrange
       const requestPayload = {
         username: 'dicoding',
         password: 'secret_pass',
       };
       const app = await createServer(container);
 
+      // Action
       const response = await request(app).post('/authentications').send(requestPayload);
 
+      // Assert
       expect(response.status).toEqual(401);
       expect(response.body.status).toEqual('fail');
       expect(response.body.message).toEqual('invalid credentials');
     });
 
     it('should response 401 if password wrong', async () => {
+      // Arrange
       const requestPayload = {
         username: 'dicoding',
         password: 'wrong_password',
       };
       const app = await createServer(container);
 
+      // Action
       await request(app).post('/users').send({
         username: 'dicoding',
         password: 'secret_pass',
@@ -82,19 +90,23 @@ describe('HTTP server', () => {
 
       const response = await request(app).post('/authentications').send(requestPayload);
 
+      // Assert
       expect(response.status).toEqual(401);
       expect(response.body.status).toEqual('fail');
       expect(response.body.message).toEqual('invalid credentials');
     });
 
     it('should response 401 if login payload not contain needed property', async () => {
+      // Arrange
       const requestPayload = {
         username: 'dicoding',
       };
       const app = await createServer(container);
 
+      // Action
       const response = await request(app).post('/authentications').send(requestPayload);
 
+      // Assert
       expect(response.status).toEqual(401);
       expect(response.body.status).toEqual('fail');
       expect(response.body.message).toEqual('username and password must not be empty');
