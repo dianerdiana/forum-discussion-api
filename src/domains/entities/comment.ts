@@ -22,7 +22,7 @@ export class Comment {
   }
 
   get parentId() {
-    return this.props.threadId;
+    return this.props.parentId;
   }
 
   get owner() {
