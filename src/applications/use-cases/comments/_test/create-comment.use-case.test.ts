@@ -50,6 +50,7 @@ describe('CreateCommentUseCase', () => {
       save: saveMock,
       delete: vi.fn(),
       findThreadComments: vi.fn(),
+      findById: vi.fn(),
     };
 
     const useCase = new CreateCommentUseCase({
@@ -118,6 +119,7 @@ describe('CreateCommentUseCase', () => {
       save: saveMock,
       delete: vi.fn(),
       findThreadComments: vi.fn(),
+      findById: vi.fn(),
     };
 
     const useCase = new CreateCommentUseCase({
@@ -162,6 +164,7 @@ describe('CreateCommentUseCase', () => {
       save: vi.fn(),
       delete: vi.fn(),
       findThreadComments: vi.fn(),
+      findById: vi.fn(),
     };
 
     const useCase = new CreateCommentUseCase({
@@ -199,6 +202,7 @@ describe('CreateCommentUseCase', () => {
       save: vi.fn(),
       delete: vi.fn(),
       findThreadComments: vi.fn(),
+      findById: vi.fn(),
     };
 
     const useCase = new CreateCommentUseCase({

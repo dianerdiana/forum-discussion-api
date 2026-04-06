@@ -34,8 +34,10 @@ export class CreateCommentUseCase {
   async execute(createCommentDto: CreateCommentDto): Promise<CreateCommentResponse> {
     const { content, parentId, threadId, userId } = this.validateDto(createCommentDto);
 
-    await this.threadRepository.findById(threadId);
-    await this.userRepository.findById(userId);
+    await Promise.all([
+      this.threadRepository.findById(threadId),
+      this.userRepository.findById(userId),
+    ]);
 
     const comment = Comment.create({
       content: content.value,
