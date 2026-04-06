@@ -49,7 +49,7 @@ describe('Users Route', () => {
       // Assert
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('username must be a string');
+      expect(response.body.message).toEqual('username harus berupa string');
     });
 
     it('should response 400 when request payload not meet data type specification', async () => {
@@ -67,7 +67,7 @@ describe('Users Route', () => {
       // Assert
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('fullname must be a string');
+      expect(response.body.message).toEqual('fullname harus berupa string');
     });
 
     it('should response 400 when username more than 50 character', async () => {
@@ -85,7 +85,7 @@ describe('Users Route', () => {
       // Assert
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('username cannot exceed 50 characters');
+      expect(response.body.message).toEqual('username tidak boleh lebih dari 50 karakter');
     });
 
     it('should response 400 when username contain restricted character', async () => {
@@ -103,7 +103,9 @@ describe('Users Route', () => {
       // Assert
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('username contains invalid characters');
+      expect(response.body.message).toEqual(
+        'tidak dapat membuat user baru karena username mengandung karakter terlarang',
+      );
     });
 
     it('should response 400 when username unavailable', async () => {
@@ -122,7 +124,7 @@ describe('Users Route', () => {
       // Assert
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('username is not available');
+      expect(response.body.message).toEqual('username tidak tersedia');
     });
   });
 });
