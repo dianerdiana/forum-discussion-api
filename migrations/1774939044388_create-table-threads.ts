@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { MigrationBuilder } from 'node-pg-migrate';
 
 export const up = (pgm: MigrationBuilder): void => {
@@ -20,7 +21,7 @@ export const up = (pgm: MigrationBuilder): void => {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    createdAt: {
+    created_at: {
       type: 'timestamp',
       notNull: true,
       default: pgm.func('now()'),

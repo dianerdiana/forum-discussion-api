@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { MigrationBuilder } from 'node-pg-migrate';
 
 export const up = (pgm: MigrationBuilder): void => {
@@ -6,13 +7,13 @@ export const up = (pgm: MigrationBuilder): void => {
       type: 'VARCHAR(50)',
       primaryKey: true,
     },
-    threadId: {
+    thread_id: {
       type: 'VARCHAR(50)',
       references: 'threads',
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
-    parentId: {
+    parent_id: {
       type: 'VARCHAR(50)',
       references: 'comments',
       onUpdate: 'CASCADE',
@@ -27,12 +28,12 @@ export const up = (pgm: MigrationBuilder): void => {
       type: 'VARCHAR(255)',
       notNull: true,
     },
-    createdAt: {
+    created_at: {
       type: 'timestamp',
       notNull: true,
       default: pgm.func('now()'),
     },
-    deletedAt: {
+    deleted_at: {
       type: 'timestamp',
     },
   });
