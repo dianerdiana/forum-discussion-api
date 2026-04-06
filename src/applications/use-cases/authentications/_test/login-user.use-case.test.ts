@@ -39,6 +39,7 @@ describe('LoginUserUseCase', () => {
       existsByUsername: vi.fn(),
       findById: vi.fn(),
       findByUsername: vi.fn().mockResolvedValue(user),
+      findByIds: vi.fn(),
     };
     const mockAuthenticationRepository: AuthenticationRepository = {
       save: vi.fn().mockResolvedValue(authentication),
