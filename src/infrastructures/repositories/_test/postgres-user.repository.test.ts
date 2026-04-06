@@ -167,4 +167,83 @@ describe('PostgresUserRepository', () => {
       expect(result).toBe(true);
     });
   });
+
+  describe('findByIds', () => {
+    it('should return empty array when no ids are provided', async () => {
+      // Arrange
+      const userRepository = new PostgresUserRepository(db);
+
+      // Action
+      const result = await userRepository.findByIds([]);
+
+      // Assert
+      expect(result).toStrictEqual([]);
+    });
+
+    it('should return empty array when none of the ids exist', async () => {
+      // Arrange
+      const userRepository = new PostgresUserRepository(db);
+
+      // Action
+      const result = await userRepository.findByIds([
+        UserId.create('user-404'),
+        UserId.create('user-405'),
+      ]);
+
+      // Assert
+      expect(result).toStrictEqual([]);
+    });
+
+    it('should return only existing users when some ids do not exist', async () => {
+      // Arrange
+      const userRepository = new PostgresUserRepository(db);
+      await UsersTableTestHelper.addUser({
+        id: 'user-123',
+        username: 'dicoding',
+        fullname: 'Dicoding Indonesia',
+        password: 'secret_pass',
+      });
+
+      // Action
+      const result = await userRepository.findByIds([
+        UserId.create('user-123'),
+        UserId.create('user-404'),
+      ]);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0]!.id.value).toBe('user-123');
+      expect(result[0]!.username.value).toBe('dicoding');
+    });
+
+    it('should return all users when all ids exist', async () => {
+      // Arrange
+      const userRepository = new PostgresUserRepository(db);
+      await UsersTableTestHelper.addUser({
+        id: 'user-123',
+        username: 'dicoding',
+        fullname: 'Dicoding Indonesia',
+        password: 'secret_pass',
+      });
+      await UsersTableTestHelper.addUser({
+        id: 'user-456',
+        username: 'johndoe',
+        fullname: 'John Doe',
+        password: 'secret_pass',
+      });
+
+      // Action
+      const result = await userRepository.findByIds([
+        UserId.create('user-123'),
+        UserId.create('user-456'),
+      ]);
+
+      // Assert
+      expect(result).toHaveLength(2);
+
+      const ids = result.map((u) => u.id.value);
+      expect(ids).toContain('user-123');
+      expect(ids).toContain('user-456');
+    });
+  });
 });

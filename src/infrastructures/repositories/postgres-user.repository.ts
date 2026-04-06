@@ -80,6 +80,22 @@ export class PostgresUserRepository implements UserRepository {
     return Boolean(result.rows[0]);
   }
 
+  async findByIds(ids: UserId[]): Promise<User[]> {
+    const userIds = ids.map((id) => id.value);
+
+    const result = await this.db.query<{
+      id: string;
+      fullname: string;
+      username: string;
+      password: string;
+    }>({
+      text: 'SELECT id,fullname,username,password FROM users WHERE id = ANY($1::text[])',
+      values: [userIds],
+    });
+
+    return result.rows.map((row) => this.mapRowToUser(row));
+  }
+
   private mapRowToUser(
     row: {
       id: string;
