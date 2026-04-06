@@ -55,6 +55,7 @@ DomainErrorTranslator._directories = {
   'COMMENT_CONTENT.NOT_STRING': new InvariantError('content harus berupa string'),
   'COMMENT_CONTENT.EMPTY': new InvariantError('content harus berupa string'),
 
+  'USER.NOT_FOUND': new InvariantError('user tidak ditemukan')
 };
 
 export { DomainErrorTranslator };
