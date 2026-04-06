@@ -1,10 +1,10 @@
-import { CommentContent, CommentId } from '../value-objects/index.js';
+import { CommentContent, CommentId, ThreadId, UserId } from '../value-objects/index.js';
 
 export interface CommentProps {
   id: CommentId;
-  threadId: string;
-  parentId: string | null;
-  owner: string;
+  threadId: ThreadId;
+  parentId: CommentId | null;
+  owner: UserId;
   content: CommentContent;
   createdAt: Date;
   deletedAt: Date | null;
@@ -44,7 +44,7 @@ export class Comment {
   // Factory methods
   static create(props: {
     id?: string;
-    parentId: string;
+    parentId?: string | null;
     threadId: string;
     content: string;
     owner: string;
@@ -53,9 +53,9 @@ export class Comment {
 
     return new Comment({
       id: CommentId.create(props.id),
-      threadId: props.threadId,
-      parentId: props.parentId,
-      owner: props.owner,
+      threadId: ThreadId.create(props.threadId),
+      parentId: props.parentId ? CommentId.create(props.parentId) : null,
+      owner: UserId.create(props.owner),
       content: CommentContent.create(props.content),
       createdAt: now,
       deletedAt: null,
@@ -73,10 +73,10 @@ export class Comment {
   }): Comment {
     return new Comment({
       id: CommentId.create(props.id),
-      threadId: props.threadId,
-      parentId: props.parentId,
+      threadId: ThreadId.create(props.threadId),
+      parentId: props.parentId ? CommentId.create(props.parentId) : null,
+      owner: UserId.create(props.owner),
       content: CommentContent.create(props.content),
-      owner: props.owner,
       createdAt: props.createdAt,
       deletedAt: props.deletedAt,
     });
@@ -94,10 +94,10 @@ export class Comment {
   } {
     return {
       id: this.props.id.value,
-      threadId: this.props.threadId,
-      parentId: this.props.parentId,
+      threadId: this.props.threadId.value,
+      parentId: this.props.parentId ? this.props.parentId.value : null,
       content: this.props.content.value,
-      owner: this.props.owner,
+      owner: this.props.owner.value,
       createdAt: this.props.createdAt,
       deletedAt: this.props.deletedAt,
     };
