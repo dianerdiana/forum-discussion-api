@@ -156,7 +156,6 @@ describe('PostgresCommentRepository', () => {
       expect(result).toHaveLength(2);
       const deletedComment = result.find((c) => c.id.value === 'comment-deleted');
 
-      console.log(deletedComment);
       expect(deletedComment?.deletedAt).not.toBeNull();
     });
 

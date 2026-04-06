@@ -1,4 +1,4 @@
-import { InvariantError } from '@/commons/index.js';
+import { InvariantError, NotFoundError } from '@/commons/index.js';
 
 import { Comment, CommentId, type CommentRepository, ThreadId } from '@/domains/index.js';
 
@@ -56,6 +56,26 @@ export class PostgresCommentRepository implements CommentRepository {
     });
 
     return result.rows.map((row) => this.mapRowToComment(row));
+  }
+
+  async findById(id: CommentId): Promise<Comment> {
+    const result = await this.db.query<{
+      id: string;
+      thread_id: string;
+      parent_id: string;
+      owner: string;
+      content: string;
+      created_at: string;
+      deleted_at: string | null;
+    }>({
+      text: 'SELECT * FROM commments WHERE id = $1 LIMIT 1',
+      values: [id.value],
+    });
+
+    const row = result.rows[0];
+    if (!row) throw new NotFoundError('komentar tidak ditemukan');
+
+    return this.mapRowToComment(row);
   }
 
   async delete(id: CommentId): Promise<void> {

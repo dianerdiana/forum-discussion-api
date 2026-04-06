@@ -1,4 +1,4 @@
-import { InvariantError } from '@/commons/index.js';
+import { InvariantError, NotFoundError } from '@/commons/index.js';
 
 import { User, type UserId, type Username, type UserRepository } from '@/domains/index.js';
 
@@ -49,7 +49,7 @@ export class PostgresUserRepository implements UserRepository {
     });
 
     const row = result.rows[0];
-    if (!row) throw new InvariantError('user tidak ditemukan');
+    if (!row) throw new NotFoundError('user tidak ditemukan');
 
     return this.mapRowToUser(row);
   }

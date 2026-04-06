@@ -5,4 +5,5 @@ export interface CommentRepository {
   save(payload: Comment): Promise<Comment>;
   delete(id: CommentId): Promise<void>;
   findThreadComments(threadId: ThreadId): Promise<Comment[]>;
+  findById(id: CommentId): Promise<Comment>;
 }
