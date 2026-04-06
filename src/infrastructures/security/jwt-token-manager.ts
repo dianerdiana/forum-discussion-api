@@ -8,37 +8,37 @@ import type { AuthPayload } from '@/domains/index.js';
 import type { JwtAdapter } from './jwt-adapter.js';
 
 export class JwtTokenManager implements AuthenticationTokenManager {
-  private readonly jwt: JwtAdapter;
+  private readonly jwtAdapter: JwtAdapter;
 
-  constructor(jwt: JwtAdapter) {
-    this.jwt = jwt;
+  constructor(jwtAdapter: JwtAdapter) {
+    this.jwtAdapter = jwtAdapter;
   }
 
   async createAccessToken(payload: AuthPayload): Promise<string> {
-    return this.jwt.sign(payload, config.auth.accessTokenKey);
+    return this.jwtAdapter.sign(payload, config.auth.accessTokenKey);
   }
 
   async createRefreshToken(payload: AuthPayload): Promise<string> {
-    return this.jwt.sign(payload, config.auth.refreshTokenKey);
+    return this.jwtAdapter.sign(payload, config.auth.refreshTokenKey);
   }
 
   async verifyRefreshToken(token: string): Promise<void> {
     try {
-      this.jwt.verify(token, config.auth.refreshTokenKey);
+      this.jwtAdapter.verify(token, config.auth.refreshTokenKey);
     } catch {
-      throw new InvariantError('invalid refresh token');
+      throw new InvariantError('refresh token tidak valid');
     }
   }
 
   async decodePayload(token: string): Promise<AuthPayload> {
-    const payload = this.jwt.decode(token);
+    const payload = this.jwtAdapter.decode(token);
 
     if (!payload || typeof payload === 'string') {
-      throw new InvariantError('invalid token');
+      throw new InvariantError('token tidak valid');
     }
 
     if (typeof payload.userId !== 'string' || typeof payload.username !== 'string') {
-      throw new InvariantError('invalid token');
+      throw new InvariantError('token tidak valid');
     }
 
     return { userId: payload.userId, username: payload.username };

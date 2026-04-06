@@ -1,4 +1,4 @@
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export class JwtAdapter {
   sign(payload: object, secret: string, options?: object) {
