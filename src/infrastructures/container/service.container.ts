@@ -88,7 +88,7 @@ export const serviceContainer: InstanceOption[] = [
     parameter: {
       dependencies: [
         {
-          name: 'jwt',
+          name: 'jwtAdapter',
           internal: JwtAdapter.name,
         },
       ],

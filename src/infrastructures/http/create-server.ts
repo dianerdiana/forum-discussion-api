@@ -19,6 +19,7 @@ export const createServer = async (container: Container) => {
   // Global error handler
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((error: any, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(error);
     // bila response tersebut error, tangani sesuai kebutuhan
     const translatedError = DomainErrorTranslator.translate(error);
 
