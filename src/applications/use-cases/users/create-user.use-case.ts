@@ -1,7 +1,14 @@
 import type { CreateUserDto } from '@/applications/dtos/index.js';
 import type { PasswordHash } from '@/applications/security/index.js';
 
-import { DomainError, User, Username, type UserRepository } from '@/domains/index.js';
+import {
+  DomainError,
+  Fullname,
+  Password,
+  User,
+  Username,
+  type UserRepository,
+} from '@/domains/index.js';
 
 export class CreateUserUseCase {
   private readonly userRepository: UserRepository;
@@ -23,15 +30,15 @@ export class CreateUserUseCase {
     username: string;
     fullname: string;
   }> {
-    const username = Username.create(createUserDto.username);
+    const { username, fullname, password } = this.validateDto(createUserDto);
 
     const existsUsername = await this.userRepository.existsByUsername(username);
     if (existsUsername) throw new DomainError('USERNAME.NOT_AVAILABLE');
 
-    const hashPassword = await this.passwordHash.hash(createUserDto.password);
+    const hashPassword = await this.passwordHash.hash(password.value);
     const user = User.create({
-      username: createUserDto.username,
-      fullname: createUserDto.fullname,
+      username: username.value,
+      fullname: fullname.value,
       password: hashPassword,
     });
 
@@ -41,6 +48,18 @@ export class CreateUserUseCase {
       id: savedUser.id.value,
       username: savedUser.username.value,
       fullname: savedUser.fullname.value,
+    };
+  }
+
+  private validateDto(createUserDto: CreateUserDto): {
+    username: Username;
+    fullname: Fullname;
+    password: Password;
+  } {
+    return {
+      username: Username.create(createUserDto.username),
+      fullname: Fullname.create(createUserDto.fullname),
+      password: Password.create(createUserDto.password),
     };
   }
 }
