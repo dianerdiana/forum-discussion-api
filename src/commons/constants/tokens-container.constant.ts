@@ -5,4 +5,6 @@ export const TOKENS_CONTAINER = {
   database: 'Database',
   passwordHash: 'PasswordHash',
   userRepository: 'UserRepository',
+  threadRepository: 'ThreadRepository',
+  commentRepository: 'CommentRepository',
 } as const;
