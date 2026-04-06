@@ -14,6 +14,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    fileParallelism: false,
     setupFiles: ['dotenv/config'],
     coverage: {
       provider: 'v8',
