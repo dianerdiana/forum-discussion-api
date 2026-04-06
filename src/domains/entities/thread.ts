@@ -1,10 +1,10 @@
-import { ThreadBody, ThreadId, ThreadTitle, UserId } from '../value-objects/index.js';
+import { ThreadBody, ThreadId, ThreadTitle } from '../value-objects/index.js';
 
 export interface ThreadProps {
   id: ThreadId;
   title: ThreadTitle;
   body: ThreadBody;
-  owner: UserId;
+  owner: string;
   createdAt: Date;
 }
 
@@ -27,7 +27,7 @@ export class Thread {
     return this.props.owner;
   }
 
-  get date() {
+  get createdAt() {
     return this.props.createdAt;
   }
 
@@ -39,7 +39,7 @@ export class Thread {
       id: ThreadId.create(props.id),
       title: ThreadTitle.create(props.title),
       body: ThreadBody.create(props.body),
-      owner: UserId.create(props.owner),
+      owner: props.owner,
       createdAt: now,
     });
   }
@@ -55,7 +55,7 @@ export class Thread {
       id: ThreadId.create(props.id),
       title: ThreadTitle.create(props.title),
       body: ThreadBody.create(props.body),
-      owner: UserId.create(props.owner),
+      owner: props.owner,
       createdAt: props.createdAt,
     });
   }
@@ -72,7 +72,7 @@ export class Thread {
       id: this.props.id.value,
       title: this.props.title.value,
       body: this.props.body.value,
-      owner: this.props.owner.value,
+      owner: this.props.owner,
       createdAt: this.props.createdAt,
     };
   }
