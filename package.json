@@ -16,7 +16,8 @@
     "test:coverage": "vitest --coverage",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate --envPath .test.env",
-    "test:auth": "vitest --watch ./src/infrastructures/http/_test/authentications.test.ts"
+    "test:auth": "vitest --watch ./src/infrastructures/http/_test/authentications.test.ts",
+    "ts:check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
