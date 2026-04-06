@@ -3,7 +3,7 @@ import type { UserId, Username } from '../value-objects/index.js';
 
 export interface UserRepository {
   save(payload: User): Promise<User>;
-  findById(id: UserId): Promise<User | null>;
+  findById(id: UserId): Promise<User>;
   findByUsername(username: Username): Promise<User | null>;
   existsByUsername(username: Username): Promise<boolean>;
 }
