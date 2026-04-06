@@ -41,7 +41,7 @@ DomainErrorTranslator._directories = {
   'USER_ID.EMPTY': new InvariantError('user id tidak boleh kosong'),
   'AUTH_USER.NOT_FOUND': new InvariantError('kredensial yang Anda masukkan salah'),
 
-  'REFRESH_TOKEN.NOT_REGISTERED': new InvariantError('refresh token tidak terdaftar di database'),
+  'REFRESH_TOKEN.NOT_REGISTERED': new InvariantError('refresh token tidak ditemukan di database'),
   'REFRESH_TOKEN.EMPTY': new InvariantError('refresh token tidak boleh kosong'),
   'REFRESH_TOKEN.NOT_STRING': new InvariantError('refresh token harus berupa string'),
 
