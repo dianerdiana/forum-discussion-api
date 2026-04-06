@@ -4,3 +4,10 @@ export interface CreateCommentDto {
   content: string;
   userId: string;
 }
+
+export interface DeleteCommentDto {
+  id: string;
+  threadId: string;
+  parentId?: string | null;
+  userId: string;
+}
