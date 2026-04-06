@@ -19,7 +19,7 @@ export class PostgresThreadRepository implements ThreadRepository {
       title: string;
       body: string;
       owner: string;
-      createdAt: string;
+      created_at: string;
     }>({
       text: `INSERT INTO threads (id, title, body, owner)
            VALUES ($1, $2, $3, $4)
@@ -44,7 +44,7 @@ export class PostgresThreadRepository implements ThreadRepository {
       title: string;
       body: string;
       owner: string;
-      createdAt: string;
+      created_at: string;
     }>({
       text: 'SELECT id, title, body, owner FROM threads WHERE id = $1 LIMIT 1',
       values: [id.value],
@@ -61,14 +61,14 @@ export class PostgresThreadRepository implements ThreadRepository {
     title: string;
     body: string;
     owner: string;
-    createdAt: string;
+    created_at: string;
   }): Thread {
     return Thread.reconstitute({
       id: row.id,
       title: row.title,
       body: row.body,
       owner: row.owner,
-      createdAt: new Date(row.createdAt),
+      createdAt: new Date(row.created_at),
     });
   }
 }
