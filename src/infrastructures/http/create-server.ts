@@ -3,8 +3,8 @@ import type { Container } from 'instances-container';
 
 import { ClientError, DomainErrorTranslator } from '@/commons/index.js';
 
-import authentication from '@/interfaces/http/api/authentication/index.js';
-import user from '@/interfaces/http/api/user/index.js';
+import authentication from '@/interfaces/http/api/authentications/index.js';
+import user from '@/interfaces/http/api/users/index.js';
 
 export const createServer = async (container: Container) => {
   const app = express();
