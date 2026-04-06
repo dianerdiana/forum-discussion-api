@@ -77,8 +77,6 @@ describe('Comment', () => {
       // Action
       const comment = Comment.reconstitute(props);
 
-      console.log(comment.toPersistance());
-
       // Assert
       expect(comment).toBeInstanceOf(Comment);
       expect(comment.id).toBeInstanceOf(CommentId);
