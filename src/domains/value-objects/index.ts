@@ -1,5 +1,10 @@
+export { CommentContent } from './comment-content.object-value.js';
+export { CommentId } from './comment-id.value-object.js';
 export { Fullname } from './fullname.value-object.js';
 export { Password } from './password.value-object.js';
+export { ThreadBody } from './thread-body.object-value.js';
+export { ThreadId } from './thread-id.value-object.js';
+export { ThreadTitle } from './thread-title.object-value.js';
 export { Token } from './token.value-object.js';
 export { UserId } from './user-id.value-object.js';
 export { Username } from './username.value-object.js';
