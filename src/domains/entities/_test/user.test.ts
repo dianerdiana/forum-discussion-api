@@ -62,7 +62,7 @@ describe('User', () => {
     it('should reconstitute a User entity from persistence data', () => {
       // Arrange
       const createdAt = new Date('2026-04-06T00:00:00.000Z');
-      const updatedAt = new Date('2024-06-01T00:00:00.000Z');
+      const updatedAt = new Date('2026-06-01T00:00:00.000Z');
       const props = {
         id: 'user-123',
         username: 'dicoding',

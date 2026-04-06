@@ -31,6 +31,7 @@ describe('CreateUserUseCase', () => {
       save: saveMock,
       findByUsername: vi.fn(),
       findById: vi.fn(),
+      findByIds: vi.fn(),
     };
 
     const mockPasswordHash: PasswordHash = {

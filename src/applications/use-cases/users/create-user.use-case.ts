@@ -1,4 +1,5 @@
 import type { CreateUserDto } from '@/applications/dtos/index.js';
+import type { CreateUserResponse } from '@/applications/responses/index.js';
 import type { PasswordHash } from '@/applications/security/index.js';
 
 import {
@@ -25,11 +26,7 @@ export class CreateUserUseCase {
     this.passwordHash = passwordHash;
   }
 
-  async execute(createUserDto: CreateUserDto): Promise<{
-    id: string;
-    username: string;
-    fullname: string;
-  }> {
+  async execute(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
     const { username, fullname, password } = this.validateDto(createUserDto);
 
     const existsUsername = await this.userRepository.existsByUsername(username);
