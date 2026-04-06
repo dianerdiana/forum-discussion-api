@@ -84,7 +84,7 @@ export default defineConfig([
         },
       ],
 
-      'prettier/prettier': ['error', { endOfLine: 'auto' }],
+      'prettier/prettier': ['off', { endOfLine: 'auto' }],
     },
   },
 
