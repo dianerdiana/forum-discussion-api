@@ -38,6 +38,7 @@ export const DOMAIN_ERROR_CODES = [
   'COMMENT_CONTENT.EMPTY',
 
   'USER.NOT_FOUND',
+  'DELETE_COMMENT.FORBIDDEN',
 ] as const;
 
 export type DomainErrorCode = (typeof DOMAIN_ERROR_CODES)[number];

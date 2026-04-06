@@ -1,5 +1,6 @@
 import type { DomainErrorCode } from '../constants/domain-error-codes.constant.js';
 
+import { AuthorizationError } from './authorization-error.js';
 import { InvariantError } from './invariant-error.js';
 
 type DomainErrorTranslatorType = {
@@ -55,7 +56,8 @@ DomainErrorTranslator._directories = {
   'COMMENT_CONTENT.NOT_STRING': new InvariantError('content harus berupa string'),
   'COMMENT_CONTENT.EMPTY': new InvariantError('content harus berupa string'),
 
-  'USER.NOT_FOUND': new InvariantError('user tidak ditemukan')
+  'USER.NOT_FOUND': new InvariantError('user tidak ditemukan'),
+  'DELETE_COMMENT.FORBIDDEN': new AuthorizationError('Anda tidak memiliki izin untuk menghapus komentari ini.')
 };
 
 export { DomainErrorTranslator };
