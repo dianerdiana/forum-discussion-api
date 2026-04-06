@@ -59,6 +59,7 @@ describe('GetDetailThreadUseCase', () => {
       save: vi.fn(),
       delete: vi.fn(),
       findThreadComments: vi.fn().mockResolvedValue([]),
+      findById: vi.fn(),
     };
 
     const useCase = new GetDetailThreadUseCase({
@@ -125,6 +126,7 @@ describe('GetDetailThreadUseCase', () => {
       save: vi.fn(),
       delete: vi.fn(),
       findThreadComments: vi.fn().mockResolvedValue([comment]),
+      findById: vi.fn(),
     };
 
     const useCase = new GetDetailThreadUseCase({
@@ -203,6 +205,7 @@ describe('GetDetailThreadUseCase', () => {
       save: vi.fn(),
       delete: vi.fn(),
       findThreadComments: vi.fn().mockResolvedValue([parentComment, replyComment]),
+      findById: vi.fn(),
     };
 
     const useCase = new GetDetailThreadUseCase({
@@ -271,6 +274,7 @@ describe('GetDetailThreadUseCase', () => {
       save: vi.fn(),
       delete: vi.fn(),
       findThreadComments: vi.fn().mockResolvedValue([deletedComment]),
+      findById: vi.fn(),
     };
 
     const useCase = new GetDetailThreadUseCase({
@@ -305,6 +309,7 @@ describe('GetDetailThreadUseCase', () => {
       save: vi.fn(),
       delete: vi.fn(),
       findThreadComments: vi.fn().mockResolvedValue([]),
+      findById: vi.fn(),
     };
 
     const useCase = new GetDetailThreadUseCase({
@@ -336,6 +341,7 @@ describe('GetDetailThreadUseCase', () => {
       save: vi.fn(),
       delete: vi.fn(),
       findThreadComments: vi.fn().mockResolvedValue([]),
+      findById: vi.fn(),
     };
 
     const useCase = new GetDetailThreadUseCase({
