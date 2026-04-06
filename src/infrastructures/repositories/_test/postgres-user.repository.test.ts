@@ -78,12 +78,14 @@ describe('PostgresUserRepository', () => {
   });
 
   describe('findById', () => {
-    it('should return null when user is not found', async () => {
+    it('should throwing error when user is not found', async () => {
       // Arrange
       const userRepository = new PostgresUserRepository(db);
 
       // Action & Assert
-      await expect(userRepository.findById(UserId.create('user-404'))).resolves.toBeNull();
+      await expect(userRepository.findById(UserId.create('user-404'))).rejects.toThrow(
+        'user tidak ditemukan',
+      );
     });
 
     it('should return user entity when user is found', async () => {

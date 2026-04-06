@@ -37,7 +37,7 @@ export class PostgresUserRepository implements UserRepository {
     return this.mapRowToUser(createdUser, user.createdAt, user.updatedAt);
   }
 
-  async findById(id: UserId): Promise<User | null> {
+  async findById(id: UserId): Promise<User> {
     const result = await this.db.query<{
       id: string;
       fullname: string;
@@ -49,7 +49,7 @@ export class PostgresUserRepository implements UserRepository {
     });
 
     const row = result.rows[0];
-    if (!row) return null;
+    if (!row) throw new InvariantError('user tidak ditemukan');
 
     return this.mapRowToUser(row);
   }

@@ -45,7 +45,7 @@ describe('PostgresThreadRepository', () => {
       expect(result.id.value).toBe('thread-123');
       expect(result.title.value).toBe('A Thread Title');
       expect(result.body.value).toBe('A thread body content');
-      expect(result.owner).toBe('user-123');
+      expect(result.owner.value).toBe('user-123');
     });
 
     it('should update thread when id already exists', async () => {
@@ -80,7 +80,7 @@ describe('PostgresThreadRepository', () => {
       expect(result.id.value).toBe('thread-123');
       expect(result.title.value).toBe('New Title');
       expect(result.body.value).toBe('New body');
-      expect(result.owner).toBe('user-123');
+      expect(result.owner.value).toBe('user-123');
     });
   });
 
@@ -113,7 +113,7 @@ describe('PostgresThreadRepository', () => {
       expect(result.id.value).toBe('thread-123');
       expect(result.title.value).toBe('A Thread Title');
       expect(result.body.value).toBe('A thread body content');
-      expect(result.owner).toBe('user-123');
+      expect(result.owner.value).toBe('user-123');
     });
   });
 });
