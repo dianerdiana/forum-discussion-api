@@ -16,10 +16,6 @@ export class Password {
     if (!this._value || this._value.length === 0) {
       throw new DomainError('PASSWORD.EMPTY');
     }
-
-    if (this._value.length < 6) {
-      throw new DomainError('PASSWORD.TOO_SHORT');
-    }
   }
 
   get value(): string {
