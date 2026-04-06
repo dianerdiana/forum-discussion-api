@@ -1,3 +1,3 @@
-export * from './authentications/index.js';
-export * from './threads/index.js';
-export * from './users/index.js';
+export * from './authentication.dto.js';
+export * from './thread.dto.js';
+export * from './user.dto.js';
