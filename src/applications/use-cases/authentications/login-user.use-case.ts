@@ -1,11 +1,10 @@
 import type { LoginDto } from '@/applications/dtos/index.js';
 import type { AuthenticationTokenManager, PasswordHash } from '@/applications/security/index.js';
 
-import { AuthenticationError } from '@/commons/index.js';
-
 import {
   Authentication,
   type AuthenticationRepository,
+  DomainError,
   Password,
   Username,
   type UserRepository,
@@ -38,7 +37,7 @@ export class LoginUserUseCase {
     const { password, username } = this.validateDto(loginDto);
 
     const user = await this.userRepository.findByUsername(username);
-    if (!user) throw new AuthenticationError('invalid credentials');
+    if (!user) throw new DomainError('AUTH_USER.NOT_FOUND');
 
     await this.passwordHash.compare(password.value, user.password.value);
 
@@ -62,8 +61,7 @@ export class LoginUserUseCase {
     username: Username;
     password: Password;
   } {
-    if (!username || !password)
-      throw new AuthenticationError('username and password must not be empty');
+    if (!username || !password) throw new DomainError('USERNAME_AND_PASSWORD.EMPTY');
 
     const validatedPassword = Password.create(password);
     const validatedUsername = Username.create(username);

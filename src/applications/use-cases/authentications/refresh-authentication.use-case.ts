@@ -1,9 +1,7 @@
 import type { AuthenticationDto } from '@/applications/dtos/index.js';
 import type { AuthenticationTokenManager } from '@/applications/security/index.js';
 
-import { InvariantError } from '@/commons/index.js';
-
-import type { AuthenticationDomainService } from '@/domains/index.js';
+import { type AuthenticationDomainService, DomainError } from '@/domains/index.js';
 
 export class RefreshAuthenticationUseCase {
   private readonly authenticationDomainService: AuthenticationDomainService;
@@ -32,9 +30,8 @@ export class RefreshAuthenticationUseCase {
   }
 
   private validateDto({ refreshToken }: AuthenticationDto): { refreshToken: string } {
-    if (!refreshToken) throw new InvariantError('refresh token is required');
-    if (typeof refreshToken !== 'string')
-      throw new InvariantError('refresh token must be a string');
+    if (!refreshToken) throw new DomainError('REFRESH_TOKEN.EMPTY');
+    if (typeof refreshToken !== 'string') throw new DomainError('REFRESH_TOKEN.NOT_STRING');
 
     return { refreshToken };
   }
