@@ -36,9 +36,14 @@ DomainErrorTranslator._directories = {
   'USERNAME.TOO_LONG': new InvariantError('username tidak boleh lebih dari 50 karakter'),
   'USERNAME.INVALID_CHARACTER': new InvariantError('tidak dapat membuat user baru karena username mengandung karakter terlarang'),
   'USERNAME.NOT_AVAILABLE': new InvariantError('username tidak tersedia'),
+  'USERNAME_AND_PASSWORD.EMPTY': new InvariantError('username and password tidak boleh kosong'),
 
   'USER_ID.EMPTY': new InvariantError('user id tidak boleh kosong'),
-  'REFRESH_TOKEN.NOT_REGISTERED': new InvariantError('refresh token is not registered in database'),
+  'AUTH_USER.NOT_FOUND': new InvariantError('kredensial yang Anda masukkan salah'),
+
+  'REFRESH_TOKEN.NOT_REGISTERED': new InvariantError('refresh token tidak terdaftar di database'),
+  'REFRESH_TOKEN.EMPTY': new InvariantError('refresh token tidak boleh kosong'),
+  'REFRESH_TOKEN.NOT_STRING': new InvariantError('refresh token harus berupa string'),
 
   'THREAD_ID.EMPTY': new InvariantError('thread id tidak boleh kosong'),
   'THREAD_BODY.NOT_STRING': new InvariantError('body harus berupa string'),
