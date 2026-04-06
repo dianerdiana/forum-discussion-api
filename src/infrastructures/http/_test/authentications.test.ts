@@ -56,7 +56,7 @@ describe('HTTP server', () => {
       expect(response.body.data.refreshToken).toBeDefined();
     });
 
-    it('should response 401 if username not found', async () => {
+    it('should response 400 if username not found', async () => {
       // Arrange
       const requestPayload = {
         username: 'dicoding',
@@ -68,9 +68,9 @@ describe('HTTP server', () => {
       const response = await request(app).post('/authentications').send(requestPayload);
 
       // Assert
-      expect(response.status).toEqual(401);
+      expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('invalid credentials');
+      expect(response.body.message).toEqual('kredensial yang Anda masukkan salah');
     });
 
     it('should response 401 if password wrong', async () => {
@@ -93,10 +93,10 @@ describe('HTTP server', () => {
       // Assert
       expect(response.status).toEqual(401);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('invalid credentials');
+      expect(response.body.message).toEqual('kredensial yang Anda masukkan salah');
     });
 
-    it('should response 401 if login payload not contain needed property', async () => {
+    it('should response 400 if login payload not contain needed property', async () => {
       // Arrange
       const requestPayload = {
         username: 'dicoding',
@@ -107,9 +107,9 @@ describe('HTTP server', () => {
       const response = await request(app).post('/authentications').send(requestPayload);
 
       // Assert
-      expect(response.status).toEqual(401);
+      expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('username and password must not be empty');
+      expect(response.body.message).toEqual('username and password tidak boleh kosong');
     });
   });
 
@@ -143,7 +143,7 @@ describe('HTTP server', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('refresh token is required');
+      expect(response.body.message).toEqual('refresh token tidak boleh kosong');
     });
 
     it('should return 400 if refresh token not string', async () => {
@@ -153,7 +153,7 @@ describe('HTTP server', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('refresh token must be a string');
+      expect(response.body.message).toEqual('refresh token harus berupa string');
     });
 
     it('should return 400 if refresh token not valid', async () => {
@@ -178,7 +178,7 @@ describe('HTTP server', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('refresh token is not registered in database');
+      expect(response.body.message).toEqual('refresh token tidak terdaftar di database');
     });
   });
 
@@ -202,7 +202,7 @@ describe('HTTP server', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('refresh token is not registered in database');
+      expect(response.body.message).toEqual('refresh token tidak terdaftar di database');
     });
 
     it('should response 400 if payload not contain refresh token', async () => {
@@ -212,7 +212,7 @@ describe('HTTP server', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('refresh token is required');
+      expect(response.body.message).toEqual('refresh token tidak boleh kosong');
     });
   });
 
