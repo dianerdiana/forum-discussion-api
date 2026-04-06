@@ -17,27 +17,39 @@ const DomainErrorTranslator: DomainErrorTranslatorType = {
 
 // prettier-ignore
 DomainErrorTranslator._directories = {
-  'FULLNAME.NOT_STRING': new InvariantError('fullname must be a string'),
-  'FULLNAME.EMPTY': new InvariantError('fullname cannot be empty'),
-  'FULLNAME.TOO_SHORT': new InvariantError('fullname must be at least 2 characters long'),
-  'FULLNAME.TOO_LONG': new InvariantError('fullname cannot exceed 100 characters'),
-  'FULLNAME.INVALID_CHARACTER': new InvariantError('fullname contains invalid characters'),
+  'FULLNAME.NOT_STRING': new InvariantError('fullname harus berupa string'),
+  'FULLNAME.EMPTY': new InvariantError('fullname tidak boleh kosong'),
+  'FULLNAME.TOO_SHORT': new InvariantError('fullname harus diisi minimal 2 karakter'),
+  'FULLNAME.TOO_LONG': new InvariantError('fullname tidak boleh lebih dari 100 karakter'),
+  'FULLNAME.INVALID_CHARACTER': new InvariantError('fullname mengandung karakter yang tidak valid'),
 
-  'PASSWORD.NOT_STRING': new InvariantError('password must be a string'),
-  'PASSWORD.EMPTY': new InvariantError('password cannot be empty'),
-  'PASSWORD.TOO_SHORT': new InvariantError('password must be at least 6 characters long'),
+  'PASSWORD.NOT_STRING': new InvariantError('password harus berupa string'),
+  'PASSWORD.EMPTY': new InvariantError('password tidak boleh kosong'),
+  'PASSWORD.TOO_SHORT': new InvariantError('password harus diisi minimal 6 karakter'),
 
-  'TOKEN.NOT_STRING': new InvariantError('token must be a string'),
-  'TOKEN.EMPTY': new InvariantError('token cannot be empty'),
+  'TOKEN.NOT_STRING': new InvariantError('token harus berupa string'),
+  'TOKEN.EMPTY': new InvariantError('token tidak boleh kosong'),
 
-  'USERNAME.NOT_STRING': new InvariantError('username must be a string'),
-  'USERNAME.EMPTY': new InvariantError('username cannot be empty'),
-  'USERNAME.TOO_SHORT': new InvariantError('username must be at least 2 characters long'),
-  'USERNAME.TOO_LONG': new InvariantError('username cannot exceed 50 characters'),
-  'USERNAME.INVALID_CHARACTER': new InvariantError('username contains invalid characters'),
+  'USERNAME.NOT_STRING': new InvariantError('username harus berupa string'),
+  'USERNAME.EMPTY': new InvariantError('username tidak boleh kosong'),
+  'USERNAME.TOO_SHORT': new InvariantError('username harus diisi minimal 2 karakter'),
+  'USERNAME.TOO_LONG': new InvariantError('username tidak boleh lebih dari 50 karakter'),
+  'USERNAME.INVALID_CHARACTER': new InvariantError('tidak dapat membuat user baru karena username mengandung karakter terlarang'),
+  'USERNAME.NOT_AVAILABLE': new InvariantError('username tidak tersedia'),
 
-  'USER_ID.EMPTY': new InvariantError('user id cannot be empty'),
+  'USER_ID.EMPTY': new InvariantError('user id tidak boleh kosong'),
   'REFRESH_TOKEN.NOT_REGISTERED': new InvariantError('refresh token is not registered in database'),
+
+  'THREAD_ID.EMPTY': new InvariantError('thread id tidak boleh kosong'),
+  'THREAD_BODY.NOT_STRING': new InvariantError('body harus berupa string'),
+  'THREAD_BODY.EMPTY': new InvariantError('body harus berupa string'),
+  'THREAD_TITLE.NOT_STRING': new InvariantError('title harus berupa string'),
+  'THREAD_TITLE.EMPTY': new InvariantError('title harus berupa string'),
+
+  'COMMENT_ID.EMPTY': new InvariantError('comment id tidak boleh kosong'),
+  'COMMENT_CONTENT.NOT_STRING': new InvariantError('content harus berupa string'),
+  'COMMENT_CONTENT.EMPTY': new InvariantError('content harus berupa string'),
+
 };
 
 export { DomainErrorTranslator };
