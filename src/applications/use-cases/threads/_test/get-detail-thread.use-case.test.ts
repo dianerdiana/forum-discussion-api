@@ -1,0 +1,350 @@
+import { vi } from 'vitest';
+
+import { NotFoundError } from '@/commons/index.js';
+
+import {
+  Comment,
+  type CommentRepository,
+  Thread,
+  ThreadId,
+  type ThreadRepository,
+  User,
+  UserId,
+  type UserRepository,
+} from '@/domains/index.js';
+
+import { GetDetailThreadUseCase } from '../get-detail-thread.use-case.js';
+
+describe('GetDetailThreadUseCase', () => {
+  const currentDate = new Date('2026-04-06T00:00:00.000Z');
+
+  const thread = Thread.reconstitute({
+    id: 'thread-123',
+    title: 'Thread Title',
+    body: 'Thread body',
+    owner: 'user-123',
+    createdAt: currentDate,
+  });
+
+  const viewer = User.reconstitute({
+    id: 'user-123',
+    username: 'johndoe',
+    fullname: 'John Doe',
+    password: 'hashed_password',
+    createdAt: currentDate,
+    updatedAt: currentDate,
+  });
+
+  const useCasePayload = {
+    id: 'thread-123',
+    userId: 'user-123',
+  };
+
+  it('should return thread detail with empty comments', async () => {
+    // Arrange
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue(thread),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue(viewer),
+      findByIds: vi.fn().mockResolvedValue([]),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([]),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action
+    const result = await useCase.execute(useCasePayload);
+
+    // Assert
+    expect(result).toStrictEqual({
+      id: 'thread-123',
+      title: 'Thread Title',
+      body: 'Thread body',
+      date: currentDate.toISOString(),
+      username: 'johndoe',
+      comments: [],
+    });
+
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(ThreadId.create('thread-123'));
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create('user-123'));
+    expect(mockCommentRepository.findThreadComments).toHaveBeenCalledWith(
+      ThreadId.create('thread-123'),
+    );
+  });
+
+  it('should return thread detail with flat comments', async () => {
+    // Arrange
+    const commentAuthor = User.reconstitute({
+      id: 'user-456',
+      username: 'janedoe',
+      fullname: 'Jane Doe',
+      password: 'hashed_password',
+      createdAt: currentDate,
+      updatedAt: currentDate,
+    });
+
+    const comment = Comment.reconstitute({
+      id: 'comment-1',
+      threadId: 'thread-123',
+      parentId: '',
+      content: 'A flat comment',
+      owner: 'user-456',
+      createdAt: currentDate,
+      deletedAt: null,
+    });
+
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue(thread),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue(viewer),
+      findByIds: vi.fn().mockResolvedValue([commentAuthor]),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([comment]),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action
+    const result = await useCase.execute(useCasePayload);
+
+    // Assert
+    expect(result).toStrictEqual({
+      id: 'thread-123',
+      title: 'Thread Title',
+      body: 'Thread body',
+      date: currentDate.toISOString(),
+      username: 'johndoe',
+      comments: [
+        {
+          id: 'comment-1',
+          username: 'janedoe',
+          date: currentDate.toISOString(),
+          content: 'A flat comment',
+          replies: [],
+        },
+      ],
+    });
+  });
+
+  it('should build nested comment replies tree correctly', async () => {
+    // Arrange
+    const commentAuthor = User.reconstitute({
+      id: 'user-456',
+      username: 'janedoe',
+      fullname: 'Jane Doe',
+      password: 'hashed_password',
+      createdAt: currentDate,
+      updatedAt: currentDate,
+    });
+
+    const parentComment = Comment.reconstitute({
+      id: 'comment-1',
+      threadId: 'thread-123',
+      parentId: '',
+      content: 'Parent comment',
+      owner: 'user-456',
+      createdAt: currentDate,
+      deletedAt: null,
+    });
+
+    const replyComment = Comment.reconstitute({
+      id: 'comment-2',
+      threadId: 'thread-123',
+      parentId: 'comment-1',
+      content: 'A reply',
+      owner: 'user-456',
+      createdAt: currentDate,
+      deletedAt: null,
+    });
+
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue(thread),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue(viewer),
+      findByIds: vi.fn().mockResolvedValue([commentAuthor]),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([parentComment, replyComment]),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action
+    const result = await useCase.execute(useCasePayload);
+
+    // Assert
+    expect(result.comments).toHaveLength(1);
+    expect(result.comments[0]).toStrictEqual({
+      id: 'comment-1',
+      username: 'janedoe',
+      date: currentDate.toISOString(),
+      content: 'Parent comment',
+      replies: [
+        {
+          id: 'comment-2',
+          username: 'janedoe',
+          date: currentDate.toISOString(),
+          content: 'A reply',
+          replies: [],
+        },
+      ],
+    });
+  });
+
+  it('should mask content of soft-deleted comment with placeholder', async () => {
+    // Arrange
+    const commentAuthor = User.reconstitute({
+      id: 'user-456',
+      username: 'janedoe',
+      fullname: 'Jane Doe',
+      password: 'hashed_password',
+      createdAt: currentDate,
+      updatedAt: currentDate,
+    });
+
+    const deletedComment = Comment.reconstitute({
+      id: 'comment-1',
+      threadId: 'thread-123',
+      parentId: '',
+      content: 'Original content',
+      owner: 'user-456',
+      createdAt: currentDate,
+      deletedAt: currentDate,
+    });
+
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue(thread),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue(viewer),
+      findByIds: vi.fn().mockResolvedValue([commentAuthor]),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([deletedComment]),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action
+    const result = await useCase.execute(useCasePayload);
+
+    // Assert
+    expect(result.comments[0]!.content).toBe('**komentar telah dihapus**');
+  });
+
+  it('should throw NotFoundError when thread is not found', async () => {
+    // Arrange
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockRejectedValue(new NotFoundError('thread not found')),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue(viewer),
+      findByIds: vi.fn().mockResolvedValue([]),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([]),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action & Assert
+    await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+  });
+
+  it('should throw NotFoundError when viewer user is not found', async () => {
+    // Arrange
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue(thread),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockRejectedValue(new NotFoundError('user not found')),
+      findByIds: vi.fn().mockResolvedValue([]),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([]),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action & Assert
+    await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+  });
+});

@@ -39,6 +39,7 @@ describe('CreateThreadUseCase', () => {
       existsByUsername: vi.fn(),
       findByUsername: vi.fn(),
       findById: vi.fn().mockResolvedValue({}),
+      findByIds: vi.fn(),
     };
 
     const createThreadUseCase = new CreateThreadUseCase({
@@ -85,6 +86,7 @@ describe('CreateThreadUseCase', () => {
       existsByUsername: vi.fn(),
       findByUsername: vi.fn(),
       findById: vi.fn().mockRejectedValue(new NotFoundError('user not found')),
+      findByIds: vi.fn(),
     };
 
     const createThreadUseCase = new CreateThreadUseCase({
