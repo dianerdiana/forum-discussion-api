@@ -19,7 +19,7 @@ export class BcryptPasswordHash implements PasswordHash {
     const result = await this.bcrypt.compare(password, hashedPassword);
 
     if (!result) {
-      throw new AuthenticationError('invalid credentials');
+      throw new AuthenticationError('kredensial yang Anda masukkan salah');
     }
 
     return result;
