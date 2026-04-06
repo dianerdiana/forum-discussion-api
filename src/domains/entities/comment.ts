@@ -83,7 +83,7 @@ export class Comment {
   }
 
   // For persistence
-  toPersistance(): {
+  toPersistence(): {
     id: string;
     content: string;
     threadId: string;

@@ -110,7 +110,7 @@ describe('Comment', () => {
     });
   });
 
-  describe('toPersistance', () => {
+  describe('toPersistence', () => {
     it('should return a plain object with all fields', () => {
       // Arrange
       const createdAt = new Date('2026-04-06T00:00:00.000Z');
@@ -125,7 +125,7 @@ describe('Comment', () => {
       });
 
       // Action
-      const result = comment.toPersistance();
+      const result = comment.toPersistence();
 
       // Assert
       expect(result).toStrictEqual({
