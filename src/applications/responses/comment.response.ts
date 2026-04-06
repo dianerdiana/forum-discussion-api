@@ -5,3 +5,9 @@ export interface CommentResponse {
   content: string;
   replies?: CommentResponse[];
 }
+
+export interface CreateCommentResponse {
+  id: string;
+  content: string;
+  owner: string;
+}
