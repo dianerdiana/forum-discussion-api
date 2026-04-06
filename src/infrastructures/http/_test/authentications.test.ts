@@ -165,7 +165,7 @@ describe('HTTP server', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('invalid refresh token');
+      expect(response.body.message).toEqual('refresh token tidak valid');
     });
 
     it('should return 400 if refresh token not registered in database', async () => {
@@ -178,7 +178,7 @@ describe('HTTP server', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('refresh token tidak terdaftar di database');
+      expect(response.body.message).toEqual('refresh token tidak ditemukan di database');
     });
   });
 
@@ -202,7 +202,7 @@ describe('HTTP server', () => {
 
       expect(response.status).toEqual(400);
       expect(response.body.status).toEqual('fail');
-      expect(response.body.message).toEqual('refresh token tidak terdaftar di database');
+      expect(response.body.message).toEqual('refresh token tidak ditemukan di database');
     });
 
     it('should response 400 if payload not contain refresh token', async () => {
