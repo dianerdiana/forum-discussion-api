@@ -6,4 +6,5 @@ export interface UserRepository {
   findById(id: UserId): Promise<User>;
   findByUsername(username: Username): Promise<User | null>;
   existsByUsername(username: Username): Promise<boolean>;
+  findByIds(ids: UserId[]): Promise<User[]>;
 }
