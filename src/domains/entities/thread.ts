@@ -1,10 +1,10 @@
-import { ThreadBody, ThreadId, ThreadTitle } from '../value-objects/index.js';
+import { ThreadBody, ThreadId, ThreadTitle, UserId } from '../value-objects/index.js';
 
 export interface ThreadProps {
   id: ThreadId;
   title: ThreadTitle;
   body: ThreadBody;
-  owner: string;
+  owner: UserId;
   createdAt: Date;
 }
 
@@ -39,7 +39,7 @@ export class Thread {
       id: ThreadId.create(props.id),
       title: ThreadTitle.create(props.title),
       body: ThreadBody.create(props.body),
-      owner: props.owner,
+      owner: UserId.create(props.owner),
       createdAt: now,
     });
   }
@@ -55,13 +55,13 @@ export class Thread {
       id: ThreadId.create(props.id),
       title: ThreadTitle.create(props.title),
       body: ThreadBody.create(props.body),
-      owner: props.owner,
+      owner: UserId.create(props.owner),
       createdAt: props.createdAt,
     });
   }
 
   // For persistence
-  toPersistance(): {
+  toPersistence(): {
     id: string;
     title: string;
     body: string;
@@ -72,7 +72,7 @@ export class Thread {
       id: this.props.id.value,
       title: this.props.title.value,
       body: this.props.body.value,
-      owner: this.props.owner,
+      owner: this.props.owner.value,
       createdAt: this.props.createdAt,
     };
   }
