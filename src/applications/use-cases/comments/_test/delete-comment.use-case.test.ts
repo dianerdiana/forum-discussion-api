@@ -136,6 +136,61 @@ describe('DeleteCommentUseCase', () => {
     expect(mockCommentRepository.delete).toHaveBeenCalledWith(CommentId.create(useCasePayload.id));
   });
 
+  it('should throw NotFoundError when parent comment is not found when deleting a reply', async () => {
+    // Arrange
+    const useCasePayload = {
+      id: 'comment-reply-1',
+      threadId: 'thread-123',
+      userId: 'user-123',
+      parentId: 'comment-404',
+    };
+
+    const findByIdMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        Comment.create({
+          id: 'comment-reply-1',
+          threadId: 'thread-123',
+          parentId: 'comment-404',
+          content: 'A reply',
+          owner: 'user-123',
+        }),
+      ) // first call: fetch the reply itself
+      .mockRejectedValueOnce(new NotFoundError('komentar tidak ditemukan')); // second call: parent not found
+
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue({}),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue({}),
+      findByIds: vi.fn(),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn(),
+      findById: findByIdMock,
+    };
+
+    const useCase = new DeleteCommentUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action & Assert
+    await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(findByIdMock).toHaveBeenCalledWith(CommentId.create('comment-reply-1'));
+    expect(findByIdMock).toHaveBeenCalledWith(CommentId.create('comment-404'));
+    expect(mockCommentRepository.delete).not.toHaveBeenCalled();
+  });
+
   it('should throw DomainError when requester is not the owner', async () => {
     // Arrange
     const useCasePayload = {
