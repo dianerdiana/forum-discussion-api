@@ -1,3 +1,5 @@
+import { InvariantError } from '@/commons/index.js';
+
 import { User, UserId, Username } from '@/domains/index.js';
 
 import { db } from '@/infrastructures/database/index.js';
@@ -74,6 +76,28 @@ describe('PostgresUserRepository', () => {
       expect(result.username.value).toBe('new_username');
       expect(result.fullname.value).toBe('New Fullname');
       expect(result.password.value).toBe('new-password');
+    });
+
+    it('should throw InvariantError when database returns no rows', async () => {
+      // Arrange
+      const userRepository = new PostgresUserRepository(db);
+      const newUser = User.create({
+        id: 'user-123',
+        username: 'dicoding',
+        fullname: 'Dicoding Indonesia',
+        password: 'secret_pass',
+      });
+
+      vi.spyOn(db, 'query').mockResolvedValueOnce({
+        rows: [],
+        rowCount: 0,
+        command: '',
+        oid: 0,
+        fields: [],
+      });
+
+      // Action & Assert
+      await expect(userRepository.save(newUser)).rejects.toThrow(InvariantError);
     });
   });
 

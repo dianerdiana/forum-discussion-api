@@ -32,7 +32,7 @@ export class PostgresUserRepository implements UserRepository {
     });
 
     const createdUser = result.rows[0];
-    if (!createdUser) throw new InvariantError('Failed creating user');
+    if (!createdUser) throw new InvariantError('gagal membuat user');
 
     return this.mapRowToUser(createdUser, user.createdAt, user.updatedAt);
   }
