@@ -185,6 +185,37 @@ describe('PostgresCommentRepository', () => {
       expect(comment.content.value).toBe('Hello world');
       expect(comment.deletedAt).toBeNull();
     });
+
+    it('should return comments ordered by created_at ascending', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      await db.query({
+        text: `INSERT INTO comments (id, thread_id, owner, content, created_at)
+               VALUES ($1, $2, $3, $4, $5)`,
+        values: ['comment-newest', 'thread-123', 'user-123', 'Newest', new Date('2025-01-03')],
+      });
+      await db.query({
+        text: `INSERT INTO comments (id, thread_id, owner, content, created_at)
+               VALUES ($1, $2, $3, $4, $5)`,
+        values: ['comment-oldest', 'thread-123', 'user-123', 'Oldest', new Date('2025-01-01')],
+      });
+      await db.query({
+        text: `INSERT INTO comments (id, thread_id, owner, content, created_at)
+               VALUES ($1, $2, $3, $4, $5)`,
+        values: ['comment-middle', 'thread-123', 'user-123', 'Middle', new Date('2025-01-02')],
+      });
+      const commentRepository = new PostgresCommentRepository(db);
+
+      // Action
+      const result = await commentRepository.findThreadComments(ThreadId.create('thread-123'));
+
+      // Assert
+      expect(result).toHaveLength(3);
+      expect(result[0]!.id.value).toBe('comment-oldest');
+      expect(result[1]!.id.value).toBe('comment-middle');
+      expect(result[2]!.id.value).toBe('comment-newest');
+    });
   });
 
   describe('findById', () => {

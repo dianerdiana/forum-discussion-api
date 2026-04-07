@@ -51,7 +51,7 @@ export class PostgresCommentRepository implements CommentRepository {
       created_at: string;
       deleted_at: string | null;
     }>({
-      text: 'SELECT * from comments WHERE thread_id = $1;',
+      text: 'SELECT * from comments WHERE thread_id = $1 ORDER BY created_at ASC',
       values: [threadId.value],
     });
 
