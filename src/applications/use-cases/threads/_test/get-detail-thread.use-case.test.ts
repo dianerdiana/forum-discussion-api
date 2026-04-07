@@ -35,10 +35,7 @@ describe('GetDetailThreadUseCase', () => {
     updatedAt: currentDate,
   });
 
-  const useCasePayload = {
-    id: 'thread-123',
-    userId: 'user-123',
-  };
+  const useCasePayload = 'thread-123';
 
   it('should return thread detail with empty comments', async () => {
     // Arrange

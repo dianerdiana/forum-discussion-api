@@ -1,11 +1,9 @@
-import type { GetDetailThreadDto } from '@/applications/dtos/index.js';
 import type { GetDetailThreadResponse } from '@/applications/responses/index.js';
 
 import {
   type CommentRepository,
   ThreadId,
   type ThreadRepository,
-  UserId,
   type UserRepository,
 } from '@/domains/index.js';
 
@@ -28,18 +26,19 @@ export class GetDetailThreadUseCase {
     this.commentRepository = commentRepository;
   }
 
-  async execute(getDetailThreadDto: GetDetailThreadDto): Promise<GetDetailThreadResponse> {
-    const { id, userId } = this.validateDto(getDetailThreadDto);
+  async execute(id: string): Promise<GetDetailThreadResponse> {
+    const { threadId } = this.validateDto(id);
 
-    const [thread, user, flatComments] = await Promise.all([
-      this.threadRepository.findById(id),
-      this.userRepository.findById(userId),
-      this.commentRepository.findThreadComments(id),
+    const [thread, flatComments] = await Promise.all([
+      this.threadRepository.findById(threadId),
+      this.commentRepository.findThreadComments(threadId),
     ]);
 
+    const ownerThread = await this.userRepository.findById(thread.owner);
+
     // 1. Resolve semua username sekaligus (hindari N+1)
-    const ownerIds = [...new Set(flatComments.map((c) => c.owner))];
-    const commentUsers = await this.userRepository.findByIds(ownerIds);
+    const ownerCommentIds = [...new Set(flatComments.map((c) => c.owner))];
+    const commentUsers = await this.userRepository.findByIds(ownerCommentIds);
     const usernameMap = new Map(commentUsers.map((u) => [u.id.value, u.username.value]));
 
     // 2. Buat Map dari id → node response (masih flat)
@@ -73,15 +72,14 @@ export class GetDetailThreadUseCase {
       title: thread.title.value,
       body: thread.body.value,
       date: thread.createdAt.toISOString(),
-      username: user.username.value,
+      username: ownerThread.username.value,
       comments: rootComments,
     };
   }
 
-  private validateDto(getDetailThreadDto: GetDetailThreadDto): { id: ThreadId; userId: UserId } {
+  private validateDto(id: string): { threadId: ThreadId } {
     return {
-      id: ThreadId.create(getDetailThreadDto.id),
-      userId: UserId.create(getDetailThreadDto.userId),
+      threadId: ThreadId.create(id),
     };
   }
 }
