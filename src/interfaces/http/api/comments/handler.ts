@@ -14,6 +14,7 @@ export class CommentHandler {
     this.container = container;
 
     this.postCommentHandler = this.postCommentHandler.bind(this);
+    this.deleteCommentHandler = this.deleteCommentHandler.bind(this);
   }
 
   async postCommentHandler(req: Request, res: Response, next: NextFunction) {
@@ -21,8 +22,6 @@ export class CommentHandler {
       const user = req.user as AuthPayload;
       const threadId = req.params.threadId as string;
       const content = req.body.content;
-
-      console.log(req.originalUrl);
 
       const createCommentUseCase = this.container.getInstance(
         CreateCommentUseCase.name,
@@ -61,7 +60,7 @@ export class CommentHandler {
         userId: user.userId,
       });
 
-      res.status(201).json({
+      res.status(200).json({
         status: RESPONSE_STATUS.success,
         message: 'berhasil menghapus komentar',
       });
