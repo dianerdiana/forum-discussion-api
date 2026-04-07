@@ -5,6 +5,7 @@ import type { AuthenticationTokenManager, PasswordHash } from '@/applications/se
 import {
   Authentication,
   type AuthenticationRepository,
+  DomainError,
   User,
   Username,
   type UserRepository,
@@ -41,11 +42,13 @@ describe('LoginUserUseCase', () => {
       findByUsername: vi.fn().mockResolvedValue(user),
       findByIds: vi.fn(),
     };
+
     const mockAuthenticationRepository: AuthenticationRepository = {
       save: vi.fn().mockResolvedValue(authentication),
       deleteToken: vi.fn(),
       existsByToken: vi.fn(),
     };
+
     const mockAuthenticationTokenManager: AuthenticationTokenManager = {
       createAccessToken: vi.fn().mockResolvedValue(mockedAuthentication.accessToken),
       createRefreshToken: vi.fn().mockResolvedValue(mockedAuthentication.refreshToken),
@@ -87,5 +90,55 @@ describe('LoginUserUseCase', () => {
     expect(mockAuthenticationRepository.save).toHaveBeenCalledWith(
       Authentication.create({ token: mockedAuthentication.refreshToken }),
     );
+  });
+
+  it('should throw DomainError when user is not found', async () => {
+    // Arrange
+    const useCasePayload = {
+      username: 'unknown_user',
+      password: 'secret_pass',
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findById: vi.fn(),
+      findByUsername: vi.fn().mockResolvedValue(null),
+      findByIds: vi.fn(),
+    };
+
+    const mockAuthenticationRepository: AuthenticationRepository = {
+      save: vi.fn(),
+      deleteToken: vi.fn(),
+      existsByToken: vi.fn(),
+    };
+
+    const mockAuthenticationTokenManager: AuthenticationTokenManager = {
+      createAccessToken: vi.fn(),
+      createRefreshToken: vi.fn(),
+      decodePayload: vi.fn(),
+      verifyRefreshToken: vi.fn(),
+      verifyAccessToken: vi.fn(),
+    };
+
+    const mockPasswordHash: PasswordHash = {
+      compare: vi.fn(),
+      hash: vi.fn(),
+    };
+
+    const loginUserUseCase = new LoginUserUseCase({
+      userRepository: mockUserRepository,
+      authenticationRepository: mockAuthenticationRepository,
+      authenticationTokenManager: mockAuthenticationTokenManager,
+      passwordHash: mockPasswordHash,
+    });
+
+    // Action & Assert
+    await expect(loginUserUseCase.execute(useCasePayload)).rejects.toThrow(DomainError);
+    expect(mockUserRepository.findByUsername).toHaveBeenCalledWith(
+      Username.create(useCasePayload.username),
+    );
+    expect(mockPasswordHash.compare).not.toHaveBeenCalled();
+    expect(mockAuthenticationRepository.save).not.toHaveBeenCalled();
   });
 });
