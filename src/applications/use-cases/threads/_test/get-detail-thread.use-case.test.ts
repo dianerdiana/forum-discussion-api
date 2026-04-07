@@ -452,4 +452,49 @@ describe('GetDetailThreadUseCase', () => {
     );
     expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create('user-123'));
   });
+
+  it('should use [deleted] as username when comment owner is not found in user map', async () => {
+    // Arrange
+    const comment = Comment.reconstitute({
+      id: 'comment-1',
+      threadId: 'thread-123',
+      parentId: '',
+      content: 'A comment from unknown user',
+      owner: 'user-999',
+      createdAt: currentDate,
+      deletedAt: null,
+    });
+
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue(thread),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue(viewer),
+      findByIds: vi.fn().mockResolvedValue([]), // owner tidak ditemukan
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([comment]),
+      findById: vi.fn(),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action
+    const result = await useCase.execute(useCasePayload);
+
+    // Assert
+    expect(result.comments[0]!.username).toBe('[deleted]');
+  });
 });
