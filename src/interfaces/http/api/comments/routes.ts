@@ -14,7 +14,17 @@ export const createCommentHandler = ({
   const router = express.Router({ mergeParams: true });
 
   router.post('/', authenticationMiddleware.validateUser, handler.postCommentHandler);
+  router.post(
+    '/:commentId/replies',
+    authenticationMiddleware.validateUser,
+    handler.postReplyHandler,
+  );
   router.delete('/:commentId', authenticationMiddleware.validateUser, handler.deleteCommentHandler);
+  router.delete(
+    '/:commentId/replies/:replyId',
+    authenticationMiddleware.validateUser,
+    handler.deleteReplyHandler,
+  );
 
   return router;
 };
