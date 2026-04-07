@@ -46,7 +46,7 @@ export class PostgresThreadRepository implements ThreadRepository {
       owner: string;
       created_at: string;
     }>({
-      text: 'SELECT id, title, body, owner FROM threads WHERE id = $1 LIMIT 1',
+      text: 'SELECT id, title, body, owner, created_at FROM threads WHERE id = $1 LIMIT 1',
       values: [id.value],
     });
 
