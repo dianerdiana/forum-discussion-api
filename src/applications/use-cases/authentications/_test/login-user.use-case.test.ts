@@ -51,6 +51,7 @@ describe('LoginUserUseCase', () => {
       createRefreshToken: vi.fn().mockResolvedValue(mockedAuthentication.refreshToken),
       decodePayload: vi.fn(),
       verifyRefreshToken: vi.fn(),
+      verifyAccessToken: vi.fn(),
     };
     const mockPasswordHash: PasswordHash = {
       compare: vi.fn().mockResolvedValue(true),

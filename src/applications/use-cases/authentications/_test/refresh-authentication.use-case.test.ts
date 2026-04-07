@@ -25,6 +25,7 @@ describe('RefreshAuthenticationUseCase', () => {
         username: 'dicoding',
       }),
       verifyRefreshToken: vi.fn(),
+      verifyAccessToken: vi.fn(),
     };
 
     // Create the use case instace
