@@ -39,6 +39,8 @@ export class CreateCommentUseCase {
       this.userRepository.findById(userId),
     ]);
 
+    if (parentId) await this.commentRepository.findById(parentId);
+
     const comment = Comment.create({
       content: content.value,
       threadId: threadId.value,

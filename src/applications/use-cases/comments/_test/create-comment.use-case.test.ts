@@ -214,4 +214,46 @@ describe('CreateCommentUseCase', () => {
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
   });
+
+  it('should throw NotFoundError when parentId comment does not exist', async () => {
+    // Arrange
+    const useCasePayload = {
+      threadId: 'thread-123',
+      userId: 'user-123',
+      content: 'A reply comment',
+      parentId: 'comment-404',
+    };
+
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue({}),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue({}),
+      findByIds: vi.fn(),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn(),
+      findById: vi.fn().mockRejectedValue(new NotFoundError('komentar tidak ditemukan')),
+    };
+
+    const useCase = new CreateCommentUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action & Assert
+    await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockCommentRepository.findById).toHaveBeenCalledWith(
+      CommentId.create(useCasePayload.parentId),
+    );
+  });
 });
