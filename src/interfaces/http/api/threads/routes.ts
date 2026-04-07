@@ -14,6 +14,7 @@ export const createThreadHandler = ({
   const router = express.Router();
 
   router.post('/', authenticationMiddleware.validateUser, handler.postThreadHandler);
+  router.get('/:threadId', handler.getDetailThread);
 
   return router;
 };
