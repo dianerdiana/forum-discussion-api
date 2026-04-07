@@ -1,4 +1,4 @@
-import { NotFoundError } from '@/commons/index.js';
+import { InvariantError, NotFoundError } from '@/commons/index.js';
 
 import { Thread, ThreadId } from '@/domains/index.js';
 
@@ -81,6 +81,28 @@ describe('PostgresThreadRepository', () => {
       expect(result.title.value).toBe('New Title');
       expect(result.body.value).toBe('New body');
       expect(result.owner.value).toBe('user-123');
+    });
+
+    it('should throw InvariantError when database returns no rows', async () => {
+      // Arrange
+      const threadRepository = new PostgresThreadRepository(db);
+      const newThread = Thread.create({
+        id: 'thread-123',
+        title: 'A Thread Title',
+        body: 'A thread body content',
+        owner: 'user-123',
+      });
+
+      vi.spyOn(db, 'query').mockResolvedValueOnce({
+        rows: [],
+        rowCount: 0,
+        command: '',
+        oid: 0,
+        fields: [],
+      });
+
+      // Action & Assert
+      await expect(threadRepository.save(newThread)).rejects.toThrow(InvariantError);
     });
   });
 

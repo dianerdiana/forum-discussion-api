@@ -33,7 +33,7 @@ export class PostgresThreadRepository implements ThreadRepository {
     });
 
     const createdThread = result.rows[0];
-    if (!createdThread) throw new InvariantError('Failed creating user');
+    if (!createdThread) throw new InvariantError('gagal membuat thread');
 
     return this.mapRowToThread(createdThread);
   }
