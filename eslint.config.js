@@ -11,6 +11,8 @@ import tseslint from 'typescript-eslint';
 export default defineConfig([
   {
     ignores: ['dist', 'node_modules', '.env'],
+  },
+  {
     plugins: { vitest },
   },
   js.configs.recommended,
