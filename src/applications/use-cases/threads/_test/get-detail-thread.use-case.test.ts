@@ -83,6 +83,7 @@ describe('GetDetailThreadUseCase', () => {
     expect(mockCommentRepository.findThreadComments).toHaveBeenCalledWith(
       ThreadId.create('thread-123'),
     );
+    expect(mockUserRepository.findByIds).toHaveBeenCalledWith([]);
   });
 
   it('should return thread detail with flat comments', async () => {
@@ -152,6 +153,13 @@ describe('GetDetailThreadUseCase', () => {
         },
       ],
     });
+
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(ThreadId.create('thread-123'));
+    expect(mockCommentRepository.findThreadComments).toHaveBeenCalledWith(
+      ThreadId.create('thread-123'),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create('user-123'));
+    expect(mockUserRepository.findByIds).toHaveBeenCalledOnce();
   });
 
   it('should build nested comment replies tree correctly', async () => {
@@ -231,6 +239,13 @@ describe('GetDetailThreadUseCase', () => {
         },
       ],
     });
+
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(ThreadId.create('thread-123'));
+    expect(mockCommentRepository.findThreadComments).toHaveBeenCalledWith(
+      ThreadId.create('thread-123'),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create('user-123'));
+    expect(mockUserRepository.findByIds).toHaveBeenCalledOnce();
   });
 
   it('should mask content of soft-deleted comment with placeholder', async () => {
@@ -285,6 +300,13 @@ describe('GetDetailThreadUseCase', () => {
 
     // Assert
     expect(result.comments[0]!.content).toBe('**komentar telah dihapus**');
+
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(ThreadId.create('thread-123'));
+    expect(mockCommentRepository.findThreadComments).toHaveBeenCalledWith(
+      ThreadId.create('thread-123'),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create('user-123'));
+    expect(mockUserRepository.findByIds).toHaveBeenCalledOnce();
   });
 
   it('should mask content of soft-deleted reply with placeholder', async () => {
@@ -349,6 +371,13 @@ describe('GetDetailThreadUseCase', () => {
 
     // Assert
     expect(result.comments[0]!.replies![0]!.content).toBe('**balasan telah dihapus**');
+
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(ThreadId.create('thread-123'));
+    expect(mockCommentRepository.findThreadComments).toHaveBeenCalledWith(
+      ThreadId.create('thread-123'),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create('user-123'));
+    expect(mockUserRepository.findByIds).toHaveBeenCalledOnce();
   });
 
   it('should throw NotFoundError when thread is not found', async () => {
@@ -381,6 +410,10 @@ describe('GetDetailThreadUseCase', () => {
 
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(ThreadId.create('thread-123'));
+    expect(mockCommentRepository.findThreadComments).toHaveBeenCalledWith(
+      ThreadId.create('thread-123'),
+    );
   });
 
   it('should throw NotFoundError when viewer user is not found', async () => {
@@ -413,5 +446,10 @@ describe('GetDetailThreadUseCase', () => {
 
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(ThreadId.create('thread-123'));
+    expect(mockCommentRepository.findThreadComments).toHaveBeenCalledWith(
+      ThreadId.create('thread-123'),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create('user-123'));
   });
 });

@@ -96,5 +96,6 @@ describe('CreateThreadUseCase', () => {
 
     // Action & Assert
     await expect(createThreadUseCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.owner));
   });
 });
