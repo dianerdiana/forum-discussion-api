@@ -129,6 +129,10 @@ describe('DeleteCommentUseCase', () => {
     expect(findByIdMock).toHaveBeenCalledTimes(2);
     expect(findByIdMock).toHaveBeenCalledWith(CommentId.create('comment-reply-1'));
     expect(findByIdMock).toHaveBeenCalledWith(CommentId.create('comment-123'));
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
     expect(mockCommentRepository.delete).toHaveBeenCalledWith(CommentId.create(useCasePayload.id));
   });
 
@@ -169,6 +173,13 @@ describe('DeleteCommentUseCase', () => {
 
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(DomainError);
+    expect(mockCommentRepository.findById).toHaveBeenCalledWith(
+      CommentId.create(useCasePayload.id),
+    );
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
     expect(mockCommentRepository.delete).not.toHaveBeenCalled();
   });
 
@@ -208,6 +219,13 @@ describe('DeleteCommentUseCase', () => {
 
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockCommentRepository.findById).toHaveBeenCalledWith(
+      CommentId.create(useCasePayload.id),
+    );
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
   });
 
   it('should throw NotFoundError when thread is not found', async () => {
@@ -246,6 +264,13 @@ describe('DeleteCommentUseCase', () => {
 
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockCommentRepository.findById).toHaveBeenCalledWith(
+      CommentId.create(useCasePayload.id),
+    );
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
   });
 
   it('should throw NotFoundError when user is not found', async () => {
@@ -284,5 +309,12 @@ describe('DeleteCommentUseCase', () => {
 
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockCommentRepository.findById).toHaveBeenCalledWith(
+      CommentId.create(useCasePayload.id),
+    );
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
   });
 });

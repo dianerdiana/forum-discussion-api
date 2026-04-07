@@ -137,6 +137,14 @@ describe('CreateCommentUseCase', () => {
     const commentArg = saveMock.mock.calls[0]![0];
     expect(commentArg.parentId).toBeInstanceOf(CommentId);
     expect(commentArg.parentId?.value).toBe(useCasePayload.parentId);
+
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
+    expect(mockCommentRepository.findById).toHaveBeenCalledWith(
+      CommentId.create(useCasePayload.parentId),
+    );
   });
 
   it('should throw NotFoundError when thread is not found', async () => {
@@ -175,6 +183,10 @@ describe('CreateCommentUseCase', () => {
 
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
   });
 
   it('should throw NotFoundError when user is not found', async () => {
@@ -213,6 +225,10 @@ describe('CreateCommentUseCase', () => {
 
     // Action & Assert
     await expect(useCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
   });
 
   it('should throw NotFoundError when parentId comment does not exist', async () => {
@@ -255,5 +271,9 @@ describe('CreateCommentUseCase', () => {
     expect(mockCommentRepository.findById).toHaveBeenCalledWith(
       CommentId.create(useCasePayload.parentId),
     );
+    expect(mockThreadRepository.findById).toHaveBeenCalledWith(
+      ThreadId.create(useCasePayload.threadId),
+    );
+    expect(mockUserRepository.findById).toHaveBeenCalledWith(UserId.create(useCasePayload.userId));
   });
 });
