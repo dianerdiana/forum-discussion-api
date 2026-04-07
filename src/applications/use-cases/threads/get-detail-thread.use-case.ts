@@ -50,7 +50,9 @@ export class GetDetailThreadUseCase {
         id: comment.id.value,
         username: usernameMap.get(comment.owner.value) ?? '[deleted]',
         date: comment.createdAt.toISOString(),
-        content: comment.deletedAt ? '**komentar telah dihapus**' : comment.content.value,
+        content: comment.deletedAt
+          ? `**${comment.parentId ? 'balasan' : 'komentar'} telah dihapus**`
+          : comment.content.value,
         replies: [],
       });
     }

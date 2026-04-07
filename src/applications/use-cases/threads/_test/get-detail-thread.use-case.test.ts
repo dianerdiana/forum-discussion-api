@@ -287,6 +287,70 @@ describe('GetDetailThreadUseCase', () => {
     expect(result.comments[0]!.content).toBe('**komentar telah dihapus**');
   });
 
+  it('should mask content of soft-deleted reply with placeholder', async () => {
+    // Arrange
+    const commentAuthor = User.reconstitute({
+      id: 'user-456',
+      username: 'janedoe',
+      fullname: 'Jane Doe',
+      password: 'hashed_password',
+      createdAt: currentDate,
+      updatedAt: currentDate,
+    });
+
+    const parentComment = Comment.reconstitute({
+      id: 'comment-1',
+      threadId: 'thread-123',
+      parentId: '',
+      content: 'Parent comment',
+      owner: 'user-456',
+      createdAt: currentDate,
+      deletedAt: null,
+    });
+
+    const deletedReply = Comment.reconstitute({
+      id: 'comment-2',
+      threadId: 'thread-123',
+      parentId: 'comment-1',
+      content: 'Original reply content',
+      owner: 'user-456',
+      createdAt: currentDate,
+      deletedAt: currentDate,
+    });
+
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue(thread),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue(viewer),
+      findByIds: vi.fn().mockResolvedValue([commentAuthor]),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([parentComment, deletedReply]),
+      findById: vi.fn(),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Action
+    const result = await useCase.execute(useCasePayload);
+
+    // Assert
+    expect(result.comments[0]!.replies![0]!.content).toBe('**balasan telah dihapus**');
+  });
+
   it('should throw NotFoundError when thread is not found', async () => {
     // Arrange
     const mockThreadRepository: ThreadRepository = {
