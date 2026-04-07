@@ -36,7 +36,7 @@ export class PostgresCommentRepository implements CommentRepository {
     });
 
     const createdComment = result.rows[0];
-    if (!createdComment) throw new InvariantError('Failed creating comment');
+    if (!createdComment) throw new InvariantError('gagal membuat komentar');
 
     return this.mapRowToComment(createdComment);
   }
