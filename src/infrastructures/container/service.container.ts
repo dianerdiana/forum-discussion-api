@@ -8,6 +8,8 @@ import { AuthenticationDomainService } from '@/domains/index.js';
 
 import {
   PostgresAuthenticationRepository,
+  PostgresCommentRepository,
+  PostgresThreadRepository,
   PostgresUserRepository,
 } from '@/infrastructures/repositories/index.js';
 import {
@@ -19,6 +21,7 @@ import {
 import { Database } from '../database/postgres.js';
 
 export const serviceContainer: InstanceOption[] = [
+  // Database
   {
     key: TOKENS_CONTAINER.database,
     Class: Database,
@@ -34,6 +37,8 @@ export const serviceContainer: InstanceOption[] = [
     key: JwtAdapter.name,
     Class: JwtAdapter,
   },
+
+  // Repositories
   {
     key: TOKENS_CONTAINER.userRepository,
     Class: PostgresUserRepository,
@@ -58,6 +63,32 @@ export const serviceContainer: InstanceOption[] = [
       ],
     },
   },
+  {
+    key: TOKENS_CONTAINER.commentRepository,
+    Class: PostgresCommentRepository,
+    parameter: {
+      dependencies: [
+        {
+          name: 'db',
+          internal: TOKENS_CONTAINER.database,
+        },
+      ],
+    },
+  },
+  {
+    key: TOKENS_CONTAINER.threadRepository,
+    Class: PostgresThreadRepository,
+    parameter: {
+      dependencies: [
+        {
+          name: 'db',
+          internal: TOKENS_CONTAINER.database,
+        },
+      ],
+    },
+  },
+
+  // Services
   {
     key: TOKENS_CONTAINER.authenticationDomainService,
     Class: AuthenticationDomainService,
