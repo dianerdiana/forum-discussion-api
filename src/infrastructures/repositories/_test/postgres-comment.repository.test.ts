@@ -1,3 +1,5 @@
+import { NotFoundError } from '@/commons/index.js';
+
 import { Comment, CommentId, ThreadId } from '@/domains/index.js';
 
 import { db } from '@/infrastructures/database/index.js';
@@ -182,6 +184,42 @@ describe('PostgresCommentRepository', () => {
       expect(comment.owner.value).toBe('user-123');
       expect(comment.content.value).toBe('Hello world');
       expect(comment.deletedAt).toBeNull();
+    });
+  });
+
+  describe('findById', () => {
+    it('should return a Comment entity when the id exists', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-123',
+        threadId: 'thread-123',
+        owner: 'user-123',
+        content: 'A comment content',
+      });
+      const commentRepository = new PostgresCommentRepository(db);
+
+      // Action
+      const result = await commentRepository.findById(CommentId.create('comment-123'));
+
+      // Assert
+      expect(result.id.value).toBe('comment-123');
+      expect(result.threadId.value).toBe('thread-123');
+      expect(result.owner.value).toBe('user-123');
+      expect(result.content.value).toBe('A comment content');
+      expect(result.deletedAt).toBeNull();
+    });
+
+    it('should throw NotFoundError when the id does not exist', async () => {
+      // Arrange
+      const commentRepository = new PostgresCommentRepository(db);
+
+      // Action
+      const action = () => commentRepository.findById(CommentId.create('comment-404'));
+
+      // Assert
+      await expect(action()).rejects.toThrow(NotFoundError);
     });
   });
 
