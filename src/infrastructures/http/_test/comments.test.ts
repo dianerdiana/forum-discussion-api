@@ -182,4 +182,195 @@ describe('Comments Route', () => {
       expect(response.body.status).toEqual('fail');
     });
   });
+
+  describe('when POST /threads/:threadId/comments/:commentId/replies', () => {
+    it('should response 201 and persisted reply', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-123',
+        threadId: 'thread-123',
+        owner: 'user-123',
+      });
+      const accessToken = await container
+        .getInstance(TOKENS_CONTAINER.authenticationTokenManager)
+        .createAccessToken({ userId: 'user-123', username: 'dicoding' });
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app)
+        .post('/threads/thread-123/comments/comment-123/replies')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ content: 'A reply content' });
+
+      // Assert
+      expect(response.status).toEqual(201);
+      expect(response.body.status).toEqual('success');
+      expect(response.body.data.addedReply).toBeDefined();
+      expect(response.body.data.addedReply.id).toBeDefined();
+    });
+
+    it('should response 401 when no access token provided', async () => {
+      // Arrange
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app)
+        .post('/threads/thread-123/comments/comment-123/replies')
+        .send({ content: 'A reply content' });
+
+      // Assert
+      expect(response.status).toEqual(401);
+    });
+
+    it('should response 400 when content is not a string', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-123',
+        threadId: 'thread-123',
+        owner: 'user-123',
+      });
+      const accessToken = await container
+        .getInstance(TOKENS_CONTAINER.authenticationTokenManager)
+        .createAccessToken({ userId: 'user-123', username: 'dicoding' });
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app)
+        .post('/threads/thread-123/comments/comment-123/replies')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ content: 123 });
+
+      // Assert
+      expect(response.status).toEqual(400);
+      expect(response.body.status).toEqual('fail');
+      expect(response.body.message).toEqual('content harus berupa string');
+    });
+
+    it('should response 404 when commentId does not exist', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      const accessToken = await container
+        .getInstance(TOKENS_CONTAINER.authenticationTokenManager)
+        .createAccessToken({ userId: 'user-123', username: 'dicoding' });
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app)
+        .post('/threads/thread-123/comments/comment-404/replies')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ content: 'A reply content' });
+
+      // Assert
+      expect(response.status).toEqual(404);
+      expect(response.body.status).toEqual('fail');
+    });
+  });
+
+  describe('when DELETE /threads/:threadId/comments/:commentId/replies/:replyId', () => {
+    it('should response 200 when reply deleted successfully', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-123',
+        threadId: 'thread-123',
+        owner: 'user-123',
+      });
+      await CommentsTableTestHelper.addComment({
+        id: 'reply-123',
+        threadId: 'thread-123',
+        parentId: 'comment-123',
+        owner: 'user-123',
+        content: 'A reply content',
+      });
+      const accessToken = await container
+        .getInstance(TOKENS_CONTAINER.authenticationTokenManager)
+        .createAccessToken({ userId: 'user-123', username: 'dicoding' });
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app)
+        .delete('/threads/thread-123/comments/comment-123/replies/reply-123')
+        .set('Authorization', `Bearer ${accessToken}`);
+
+      // Assert
+      expect(response.status).toEqual(200);
+      expect(response.body.status).toEqual('success');
+      expect(response.body.message).toEqual('berhasil menghapus komentar');
+    });
+
+    it('should response 401 when no access token provided', async () => {
+      // Arrange
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app).delete(
+        '/threads/thread-123/comments/comment-123/replies/reply-123',
+      );
+
+      // Assert
+      expect(response.status).toEqual(401);
+    });
+
+    it('should response 403 when user is not the reply owner', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      await UsersTableTestHelper.addUser({ id: 'other-user-id', username: 'other_user' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-123',
+        threadId: 'thread-123',
+        owner: 'user-123',
+      });
+      await CommentsTableTestHelper.addComment({
+        id: 'reply-123',
+        threadId: 'thread-123',
+        parentId: 'comment-123',
+        owner: 'user-123',
+        content: 'A reply content',
+      });
+      const accessToken = await container
+        .getInstance(TOKENS_CONTAINER.authenticationTokenManager)
+        .createAccessToken({ userId: 'other-user-id', username: 'other_user' });
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app)
+        .delete('/threads/thread-123/comments/comment-123/replies/reply-123')
+        .set('Authorization', `Bearer ${accessToken}`);
+
+      // Assert
+      expect(response.status).toEqual(403);
+      expect(response.body.status).toEqual('fail');
+    });
+
+    it('should response 404 when replyId does not exist', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
+      await ThreadsTableTestHelper.addThread({ id: 'thread-123', owner: 'user-123' });
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-123',
+        threadId: 'thread-123',
+        owner: 'user-123',
+      });
+      const accessToken = await container
+        .getInstance(TOKENS_CONTAINER.authenticationTokenManager)
+        .createAccessToken({ userId: 'user-123', username: 'dicoding' });
+      const app = await createServer(container);
+
+      // Action
+      const response = await request(app)
+        .delete('/threads/thread-123/comments/comment-123/replies/reply-404')
+        .set('Authorization', `Bearer ${accessToken}`);
+
+      // Assert
+      expect(response.status).toEqual(404);
+      expect(response.body.status).toEqual('fail');
+    });
+  });
 });
