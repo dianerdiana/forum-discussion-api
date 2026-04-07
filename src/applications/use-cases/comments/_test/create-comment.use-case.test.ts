@@ -24,14 +24,14 @@ describe('CreateCommentUseCase', () => {
       parentId: null,
     };
 
-    const savedComment = Comment.create({
-      id: 'comment-123',
-      threadId: useCasePayload.threadId,
-      content: useCasePayload.content,
-      owner: useCasePayload.userId,
-    });
-
-    const saveMock = vi.fn().mockResolvedValue(savedComment);
+    const saveMock = vi.fn().mockResolvedValue(
+      Comment.create({
+        id: 'comment-123',
+        threadId: useCasePayload.threadId,
+        content: useCasePayload.content,
+        owner: useCasePayload.userId,
+      }),
+    );
 
     const mockThreadRepository: ThreadRepository = {
       save: vi.fn(),
@@ -64,9 +64,9 @@ describe('CreateCommentUseCase', () => {
 
     // Assert
     expect(result).toStrictEqual({
-      id: savedComment.id.value,
-      content: useCasePayload.content,
-      owner: savedComment.content.value,
+      id: 'comment-123',
+      content: 'A new comment',
+      owner: 'user-123',
     });
 
     expect(mockThreadRepository.findById).toHaveBeenCalledWith(
@@ -92,15 +92,15 @@ describe('CreateCommentUseCase', () => {
       parentId: 'comment-parent-1',
     };
 
-    const savedComment = Comment.create({
-      id: 'comment-reply-1',
-      threadId: useCasePayload.threadId,
-      parentId: useCasePayload.parentId,
-      content: useCasePayload.content,
-      owner: useCasePayload.userId,
-    });
-
-    const saveMock = vi.fn().mockResolvedValue(savedComment);
+    const saveMock = vi.fn().mockResolvedValue(
+      Comment.create({
+        id: 'comment-reply-1',
+        threadId: useCasePayload.threadId,
+        parentId: useCasePayload.parentId,
+        content: useCasePayload.content,
+        owner: useCasePayload.userId,
+      }),
+    );
 
     const mockThreadRepository: ThreadRepository = {
       save: vi.fn(),
@@ -132,7 +132,7 @@ describe('CreateCommentUseCase', () => {
     const result = await useCase.execute(useCasePayload);
 
     // Assert
-    expect(result.id).toBe(savedComment.id.value);
+    expect(result.id).toBe('comment-reply-1');
 
     const commentArg = saveMock.mock.calls[0]![0];
     expect(commentArg.parentId).toBeInstanceOf(CommentId);

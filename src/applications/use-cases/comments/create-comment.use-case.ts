@@ -53,7 +53,7 @@ export class CreateCommentUseCase {
     return {
       id: savedComment.id.value,
       content: savedComment.content.value,
-      owner: savedComment.content.value,
+      owner: savedComment.owner.value,
     };
   }
 
