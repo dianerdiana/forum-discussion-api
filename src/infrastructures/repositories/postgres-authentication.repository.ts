@@ -20,7 +20,7 @@ export class PostgresAuthenticationRepository implements AuthenticationRepositor
     });
 
     const createdAuthentication = result.rows[0];
-    if (!createdAuthentication) throw new InvariantError('Failed creating authentication');
+    if (!createdAuthentication) throw new InvariantError('gagal membuat authentication');
 
     return this.mapRowToAuthentication(createdAuthentication);
   }

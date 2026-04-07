@@ -1,3 +1,7 @@
+import { vi } from 'vitest';
+
+import { InvariantError } from '@/commons/index.js';
+
 import { Authentication } from '@/domains/index.js';
 
 import { db } from '@/infrastructures/database/index.js';
@@ -29,6 +33,23 @@ describe('PostgresAuthenticationRepository', () => {
       expect(tokens).toHaveLength(1);
       expect(tokens[0]).toMatchObject({ token: 'refresh_token' });
       expect(result.token.value).toBe('refresh_token');
+    });
+
+    it('should throw InvariantError when database returns no rows', async () => {
+      // Arrange
+      const authenticationRepository = new PostgresAuthenticationRepository(db);
+      const newAuth = Authentication.create({ token: 'refresh_token' });
+
+      vi.spyOn(db, 'query').mockResolvedValueOnce({
+        rows: [],
+        rowCount: 0,
+        command: '',
+        oid: 0,
+        fields: [],
+      });
+
+      // Action & Assert
+      await expect(authenticationRepository.save(newAuth)).rejects.toThrow(InvariantError);
     });
   });
 
