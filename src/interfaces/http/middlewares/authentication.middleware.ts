@@ -10,6 +10,8 @@ export class AuthenticationMiddleware {
 
   constructor({ container }: { container: Container }) {
     this.container = container;
+
+    this.validateUser = this.validateUser.bind(this);
   }
 
   async validateUser(req: Request, _res: Response, next: NextFunction) {
@@ -28,10 +30,10 @@ export class AuthenticationMiddleware {
         return next();
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        throw new AuthenticationError('kredensial Anda tidak valid');
+        throw new AuthenticationError('Missing authentication');
       }
     }
 
-    throw new AuthenticationError('kredensial Anda tidak valid');
+    throw new AuthenticationError('Missing authentication');
   }
 }
