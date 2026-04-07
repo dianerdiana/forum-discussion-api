@@ -24,6 +24,7 @@ export class AuthenticationMiddleware {
     if (token && token.indexOf('Bearer ') !== -1) {
       try {
         const bearerToken = token.split('Bearer ')[1] || '';
+        await jwtTokenManager.verifyAccessToken(bearerToken);
         const user = await jwtTokenManager.decodePayload(bearerToken);
 
         req.user = user;
