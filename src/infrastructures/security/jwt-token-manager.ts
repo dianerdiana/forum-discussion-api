@@ -22,6 +22,14 @@ export class JwtTokenManager implements AuthenticationTokenManager {
     return this.jwtAdapter.sign(payload, config.auth.refreshTokenKey);
   }
 
+  async verifyAccessToken(token: string): Promise<void> {
+    try {
+      this.jwtAdapter.verify(token, config.auth.accessTokenKey);
+    } catch {
+      throw new InvariantError('access token tidak valid');
+    }
+  }
+
   async verifyRefreshToken(token: string): Promise<void> {
     try {
       this.jwtAdapter.verify(token, config.auth.refreshTokenKey);
