@@ -68,7 +68,7 @@ export class PostgresCommentRepository implements CommentRepository {
       created_at: string;
       deleted_at: string | null;
     }>({
-      text: 'SELECT * FROM commments WHERE id = $1 LIMIT 1',
+      text: 'SELECT * FROM comments WHERE id = $1 LIMIT 1',
       values: [id.value],
     });
 
