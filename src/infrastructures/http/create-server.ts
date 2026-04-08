@@ -4,6 +4,7 @@ import type { Container } from 'instances-container';
 import { ClientError, DomainErrorTranslator } from '@/commons/index.js';
 
 import authentication from '@/interfaces/http/api/authentications/index.js';
+import commentLike from '@/interfaces/http/api/comment-likes/index.js';
 import comment from '@/interfaces/http/api/comments/index.js';
 import thread from '@/interfaces/http/api/threads/index.js';
 import user from '@/interfaces/http/api/users/index.js';
@@ -19,6 +20,7 @@ export const createServer = async (container: Container) => {
   app.use('/authentications', authentication(container));
   app.use('/threads', thread(container));
   app.use('/threads/:threadId/comments', comment(container));
+  app.use('/threads/:threadId/comments/:commentId/likes', commentLike(container));
 
   // Global error handler
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
