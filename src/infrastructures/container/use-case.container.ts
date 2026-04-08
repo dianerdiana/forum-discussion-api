@@ -148,6 +148,10 @@ export const useCaseContainer: InstanceOption[] = [
           name: 'commentRepository',
           internal: TOKENS_CONTAINER.commentRepository,
         },
+        {
+          name: 'commentLikeRepository',
+          internal: TOKENS_CONTAINER.commentLikeRepository,
+        },
       ],
     },
   },
