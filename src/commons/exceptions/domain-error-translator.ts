@@ -57,7 +57,8 @@ DomainErrorTranslator._directories = {
   'COMMENT_CONTENT.EMPTY': new InvariantError('content harus berupa string'),
 
   'USER.NOT_FOUND': new InvariantError('user tidak ditemukan'),
-  'DELETE_COMMENT.FORBIDDEN': new AuthorizationError('Anda tidak memiliki izin untuk menghapus komentari ini.')
+  'DELETE_COMMENT.FORBIDDEN': new AuthorizationError('Anda tidak memiliki izin untuk menghapus komentari ini.'),
+  'COMMENT_LIKE_ID.EMPTY': new InvariantError('comment id tidak boleh kosong'),
 };
 
 export { DomainErrorTranslator };
