@@ -4,6 +4,7 @@ import { NotFoundError } from '@/commons/index.js';
 
 import {
   Comment,
+  type CommentLikeRepository,
   type CommentRepository,
   Thread,
   ThreadId,
@@ -59,10 +60,18 @@ describe('GetDetailThreadUseCase', () => {
       findById: vi.fn(),
     };
 
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+    };
+
     const useCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
       userRepository: mockUserRepository,
       commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action
@@ -127,10 +136,18 @@ describe('GetDetailThreadUseCase', () => {
       findById: vi.fn(),
     };
 
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+    };
+
     const useCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
       userRepository: mockUserRepository,
       commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action
@@ -150,6 +167,7 @@ describe('GetDetailThreadUseCase', () => {
           date: currentDate.toISOString(),
           content: 'A flat comment',
           replies: [],
+          likeCount: 0,
         },
       ],
     });
@@ -213,10 +231,18 @@ describe('GetDetailThreadUseCase', () => {
       findById: vi.fn(),
     };
 
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+    };
+
     const useCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
       userRepository: mockUserRepository,
       commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action
@@ -229,6 +255,7 @@ describe('GetDetailThreadUseCase', () => {
       username: 'janedoe',
       date: currentDate.toISOString(),
       content: 'Parent comment',
+      likeCount: 0,
       replies: [
         {
           id: 'comment-2',
@@ -236,6 +263,7 @@ describe('GetDetailThreadUseCase', () => {
           date: currentDate.toISOString(),
           content: 'A reply',
           replies: [],
+          likeCount: 0,
         },
       ],
     });
@@ -289,10 +317,18 @@ describe('GetDetailThreadUseCase', () => {
       findById: vi.fn(),
     };
 
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+    };
+
     const useCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
       userRepository: mockUserRepository,
       commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action
@@ -360,10 +396,18 @@ describe('GetDetailThreadUseCase', () => {
       findById: vi.fn(),
     };
 
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+    };
+
     const useCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
       userRepository: mockUserRepository,
       commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action
@@ -402,10 +446,18 @@ describe('GetDetailThreadUseCase', () => {
       findById: vi.fn(),
     };
 
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+    };
+
     const useCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
       userRepository: mockUserRepository,
       commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action & Assert
@@ -438,10 +490,18 @@ describe('GetDetailThreadUseCase', () => {
       findById: vi.fn(),
     };
 
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+    };
+
     const useCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
       userRepository: mockUserRepository,
       commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action & Assert
@@ -485,10 +545,18 @@ describe('GetDetailThreadUseCase', () => {
       findById: vi.fn(),
     };
 
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([]),
+      delete: vi.fn(),
+    };
+
     const useCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
       userRepository: mockUserRepository,
       commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
     });
 
     // Action
@@ -496,5 +564,84 @@ describe('GetDetailThreadUseCase', () => {
 
     // Assert
     expect(result.comments[0]!.username).toBe('[deleted]');
+  });
+
+  it('should include likeCount for each comment based on comment likes', async () => {
+    // Arrange
+    const commentAuthor = User.reconstitute({
+      id: 'user-456',
+      username: 'janedoe',
+      fullname: 'Jane Doe',
+      password: 'hashed_password',
+      createdAt: currentDate,
+      updatedAt: currentDate,
+    });
+
+    const comment = Comment.reconstitute({
+      id: 'comment-1',
+      threadId: 'thread-123',
+      parentId: '',
+      content: 'A comment',
+      owner: 'user-456',
+      createdAt: currentDate,
+      deletedAt: null,
+    });
+
+    const { CommentLike } = await import('@/domains/index.js');
+    const like1 = CommentLike.create({
+      id: 'like-1',
+      threadId: 'thread-123',
+      commentId: 'comment-1',
+      userId: 'user-123',
+    });
+    const like2 = CommentLike.create({
+      id: 'like-2',
+      threadId: 'thread-123',
+      commentId: 'comment-1',
+      userId: 'user-456',
+    });
+
+    const mockThreadRepository: ThreadRepository = {
+      save: vi.fn(),
+      findById: vi.fn().mockResolvedValue(thread),
+    };
+
+    const mockUserRepository: UserRepository = {
+      save: vi.fn(),
+      existsByUsername: vi.fn(),
+      findByUsername: vi.fn(),
+      findById: vi.fn().mockResolvedValue(viewer),
+      findByIds: vi.fn().mockResolvedValue([commentAuthor]),
+    };
+
+    const mockCommentRepository: CommentRepository = {
+      save: vi.fn(),
+      delete: vi.fn(),
+      findThreadComments: vi.fn().mockResolvedValue([comment]),
+      findById: vi.fn(),
+    };
+
+    const mockCommentLikeRepository: CommentLikeRepository = {
+      save: vi.fn(),
+      findOne: vi.fn(),
+      findThreadCommentLikes: vi.fn().mockResolvedValue([like1, like2]),
+      delete: vi.fn(),
+    };
+
+    const useCase = new GetDetailThreadUseCase({
+      threadRepository: mockThreadRepository,
+      userRepository: mockUserRepository,
+      commentRepository: mockCommentRepository,
+      commentLikeRepository: mockCommentLikeRepository,
+    });
+
+    // Action
+    const result = await useCase.execute(useCasePayload);
+
+    // Assert
+    expect(result.comments[0]!.likeCount).toBe(2);
+    expect(mockCommentLikeRepository.findThreadCommentLikes).toHaveBeenCalledWith(
+      ThreadId.create('thread-123'),
+    );
   });
 });
