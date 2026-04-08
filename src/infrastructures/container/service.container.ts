@@ -8,6 +8,7 @@ import { AuthenticationDomainService } from '@/domains/index.js';
 
 import {
   PostgresAuthenticationRepository,
+  PostgresCommentLikeRepository,
   PostgresCommentRepository,
   PostgresThreadRepository,
   PostgresUserRepository,
@@ -78,6 +79,19 @@ export const serviceContainer: InstanceOption[] = [
   {
     key: TOKENS_CONTAINER.threadRepository,
     Class: PostgresThreadRepository,
+    parameter: {
+      dependencies: [
+        {
+          name: 'db',
+          internal: TOKENS_CONTAINER.database,
+        },
+      ],
+    },
+  },
+
+  {
+    key: TOKENS_CONTAINER.commentLikeRepository,
+    Class: PostgresCommentLikeRepository,
     parameter: {
       dependencies: [
         {
