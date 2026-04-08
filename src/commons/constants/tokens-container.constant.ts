@@ -7,4 +7,5 @@ export const TOKENS_CONTAINER = {
   userRepository: 'UserRepository',
   threadRepository: 'ThreadRepository',
   commentRepository: 'CommentRepository',
+  commentLikeRepository: 'CommentLikeRepository',
 } as const;
