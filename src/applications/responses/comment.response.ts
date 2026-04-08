@@ -4,6 +4,7 @@ export interface CommentResponse {
   date: string;
   content: string;
   replies?: CommentResponse[];
+  likeCount: number;
 }
 
 export interface CreateCommentResponse {
