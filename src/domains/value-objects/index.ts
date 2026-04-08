@@ -1,5 +1,6 @@
 export { CommentContent } from './comment-content.object-value.js';
 export { CommentId } from './comment-id.value-object.js';
+export { CommentLikeId } from './comment-like-id.value-object.js';
 export { Fullname } from './fullname.value-object.js';
 export { Password } from './password.value-object.js';
 export { ThreadBody } from './thread-body.object-value.js';
