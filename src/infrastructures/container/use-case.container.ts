@@ -9,6 +9,7 @@ import {
   GetDetailThreadUseCase,
   LoginUserUseCase,
   LogoutUserUseCase,
+  PerformCommentLikeUseCase,
   RefreshAuthenticationUseCase,
 } from '@/applications/index.js';
 
@@ -195,6 +196,33 @@ export const useCaseContainer: InstanceOption[] = [
         {
           name: 'commentRepository',
           internal: TOKENS_CONTAINER.commentRepository,
+        },
+      ],
+    },
+  },
+
+  // CommentLike Use-Case
+  {
+    key: PerformCommentLikeUseCase.name,
+    Class: PerformCommentLikeUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: TOKENS_CONTAINER.threadRepository,
+        },
+        {
+          name: 'userRepository',
+          internal: TOKENS_CONTAINER.userRepository,
+        },
+        {
+          name: 'commentRepository',
+          internal: TOKENS_CONTAINER.commentRepository,
+        },
+        {
+          name: 'commentLikeRepository',
+          internal: TOKENS_CONTAINER.commentLikeRepository,
         },
       ],
     },
