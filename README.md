@@ -24,6 +24,7 @@ A simple REST API for forum discussion features built with **Clean Architecture*
     - [Authentications](#authentications)
     - [Threads](#threads)
     - [Comments](#comments)
+    - [Comment Likes](#comment-likes)
 
 ---
 
@@ -33,6 +34,8 @@ A simple REST API for forum discussion features built with **Clean Architecture*
 - JWT-based authentication (access token & refresh token)
 - Create and view discussion thread details
 - Create and delete comments on threads
+- Reply to comments (nested replies)
+- Like and unlike comments (toggle)
 
 ---
 
@@ -100,7 +103,8 @@ forum-discussion-api/
 │   │       ├── users/                  # CreateUserUseCase
 │   │       ├── authentications/        # Login, Logout, Refresh, Delete
 │   │       ├── threads/                # CreateThread, GetDetailThread
-│   │       └── comments/              # CreateComment, DeleteComment
+│   │       ├── comments/              # CreateComment, DeleteComment
+│   │       └── comment-likes/          # PerformCommentLike (toggle like/unlike)
 │   ├── commons/
 │   │   ├── config.ts                   # Configuration from environment variables
 │   │   ├── constants/                  # Domain error codes, DI tokens, status
@@ -185,8 +189,8 @@ npm run migrate:test
 ## Running the Application
 
 ```bash
-# Development (using tsx)
-npm run dev
+# Development (using tsx watch)
+npm run start:dev
 
 # Production (after build)
 npm run build
@@ -241,7 +245,15 @@ The project includes:
 
 ### Comments
 
-| Method   | Endpoint                                 | Description                                              |
-| -------- | ---------------------------------------- | -------------------------------------------------------- |
-| `POST`   | `/threads/:threadId/comments`            | Add a comment to a thread _(requires authentication)_    |
-| `DELETE` | `/threads/:threadId/comments/:commentId` | Delete a comment _(requires authentication, owner only)_ |
+| Method   | Endpoint                                                  | Description                                              |
+| -------- | --------------------------------------------------------- | -------------------------------------------------------- |
+| `POST`   | `/threads/:threadId/comments`                             | Add a comment to a thread _(requires authentication)_    |
+| `POST`   | `/threads/:threadId/comments/:commentId/replies`          | Reply to a comment _(requires authentication)_           |
+| `DELETE` | `/threads/:threadId/comments/:commentId`                  | Delete a comment _(requires authentication, owner only)_ |
+| `DELETE` | `/threads/:threadId/comments/:commentId/replies/:replyId` | Delete a reply _(requires authentication, owner only)_   |
+
+### Comment Likes
+
+| Method | Endpoint                                       | Description                                                   |
+| ------ | ---------------------------------------------- | ------------------------------------------------------------- |
+| `PUT`  | `/threads/:threadId/comments/:commentId/likes` | Like or unlike a comment (toggle) _(requires authentication)_ |
