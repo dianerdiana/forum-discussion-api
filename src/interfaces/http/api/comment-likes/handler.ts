@@ -26,7 +26,7 @@ export class CommentLikeHandler {
         PerformCommentLikeUseCase.name,
       ) as PerformCommentLikeUseCase;
 
-      const result = await performCommentLikeUseCase.execute({
+      await performCommentLikeUseCase.execute({
         threadId,
         commentId: commentId,
         userId: user.userId,
@@ -34,9 +34,6 @@ export class CommentLikeHandler {
 
       res.status(200).json({
         status: RESPONSE_STATUS.success,
-        data: {
-          addedReply: result,
-        },
       });
     } catch (error) {
       next(error);
