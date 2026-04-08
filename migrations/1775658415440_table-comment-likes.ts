@@ -12,17 +12,21 @@ export const up = (pgm: MigrationBuilder): void => {
       references: 'threads',
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
+      notNull: true,
     },
     comment_id: {
       type: 'VARCHAR(50)',
       references: 'comments',
       onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      notNull: true,
     },
     user_id: {
       type: 'VARCHAR(50)',
       references: 'users',
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
+      notNull: true,
     },
     created_at: {
       type: 'timestamp',
