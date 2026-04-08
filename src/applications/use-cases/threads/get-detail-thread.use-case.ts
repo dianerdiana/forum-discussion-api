@@ -1,6 +1,7 @@
 import type { GetDetailThreadResponse } from '@/applications/responses/index.js';
 
 import {
+  type CommentLikeRepository,
   type CommentRepository,
   ThreadId,
   type ThreadRepository,
@@ -11,27 +12,32 @@ export class GetDetailThreadUseCase {
   private readonly threadRepository: ThreadRepository;
   private readonly userRepository: UserRepository;
   private readonly commentRepository: CommentRepository;
+  private readonly commentLikeRepository: CommentLikeRepository;
 
   constructor({
     threadRepository,
     userRepository,
     commentRepository,
+    commentLikeRepository,
   }: {
     threadRepository: ThreadRepository;
     userRepository: UserRepository;
     commentRepository: CommentRepository;
+    commentLikeRepository: CommentLikeRepository;
   }) {
     this.threadRepository = threadRepository;
     this.userRepository = userRepository;
     this.commentRepository = commentRepository;
+    this.commentLikeRepository = commentLikeRepository;
   }
 
   async execute(id: string): Promise<GetDetailThreadResponse> {
     const { threadId } = this.validateDto(id);
 
-    const [thread, flatComments] = await Promise.all([
+    const [thread, flatComments, commentLikes] = await Promise.all([
       this.threadRepository.findById(threadId),
       this.commentRepository.findThreadComments(threadId),
+      this.commentLikeRepository.findThreadCommentLikes(threadId),
     ]);
 
     const ownerThread = await this.userRepository.findById(thread.owner);
@@ -41,7 +47,14 @@ export class GetDetailThreadUseCase {
     const commentUsers = await this.userRepository.findByIds(ownerCommentIds);
     const usernameMap = new Map(commentUsers.map((u) => [u.id.value, u.username.value]));
 
-    // 2. Buat Map dari id → node response (masih flat)
+    // 2. Buat Map dari commentId → likeCount
+    const likeCountMap = new Map<string, number>();
+    for (const like of commentLikes) {
+      const commentId = like.commentId.value;
+      likeCountMap.set(commentId, (likeCountMap.get(commentId) ?? 0) + 1);
+    }
+
+    // 3. Buat Map dari id → node response (masih flat)
     type CommentNode = GetDetailThreadResponse['comments'][number];
     const nodeMap = new Map<string, CommentNode>();
 
@@ -54,10 +67,11 @@ export class GetDetailThreadUseCase {
           ? `**${comment.parentId ? 'balasan' : 'komentar'} telah dihapus**`
           : comment.content.value,
         replies: [],
+        likeCount: likeCountMap.get(comment.id.value) ?? 0,
       });
     }
 
-    // 3. Susun tree: anak masuk ke replies parent-nya
+    // 4. Susun tree: anak masuk ke replies parent-nya
     const rootComments: CommentNode[] = [];
 
     for (const comment of flatComments) {
