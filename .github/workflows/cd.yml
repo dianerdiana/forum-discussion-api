@@ -17,8 +17,11 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             cd ~/forum-discussion-api
             git pull origin main
             npm ci --omit=dev --no-audit --no-fund
+            npm run build
             npm run migrate up
             pm2 restart forum-api
