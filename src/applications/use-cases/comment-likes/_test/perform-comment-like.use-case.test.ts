@@ -97,7 +97,7 @@ describe('PerformCommentLikeUseCase', () => {
     expect(savedArg.threadId.value).toBe(useCasePayload.threadId);
     expect(savedArg.commentId.value).toBe(useCasePayload.commentId);
     expect(savedArg.userId.value).toBe(useCasePayload.userId);
-    expect(mockCommentLikeRepository.delete).toHaveBeenCalled(); // should not.toHaveBeenCalled
+    expect(mockCommentLikeRepository.delete).not.toHaveBeenCalled(); // should not.toHaveBeenCalled
   });
 
   it('should delete the existing CommentLike when one already exists (unlike)', async () => {
