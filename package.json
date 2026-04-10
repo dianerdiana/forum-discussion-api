@@ -9,8 +9,8 @@
     "build": "npm run build:ts && npm run build:alias",
     "build:ts": "tsc -p tsconfig.build.json",
     "build:alias": "tsc-alias -p tsconfig.build.json",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest --run",
@@ -45,6 +45,8 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
     "@eslint/js": "^10.0.1",
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
