@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "🔍 Running type check..."
+npm run type-check
+
+echo "🧹 Running linter check..."
+npm run lint
+
+echo "🧪 Running tests..."
+npm run test
+
+echo "✅ Pre-push checks passed!" 
