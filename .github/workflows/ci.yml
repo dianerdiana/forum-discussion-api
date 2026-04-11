@@ -40,7 +40,7 @@ jobs:
         run: |
           npm ci
           npm run migrate up
-          npm run test
+          npm run ci:test
         env:
           CI: true
           HOST: localhost
